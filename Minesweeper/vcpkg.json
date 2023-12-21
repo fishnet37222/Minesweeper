@@ -1,5 +1,8 @@
 {
   "dependencies": [
+    "boost-filesystem",
+    "boost-random",
+    "boost-json",
     {
       "name": "wxwidgets",
       "features": [
