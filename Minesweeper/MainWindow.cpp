@@ -4,6 +4,7 @@
 
 #include "pch.h"
 #include "MainWindow.h"
+#include "Settings.h"
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX))
 {
@@ -16,5 +17,17 @@ void MainWindow::InitUi()
 	this->SetIcons(wxIconBundle("APP_ICON", nullptr));
 
 	this->Fit();
-	this->CenterOnScreen();
+	auto position = Settings::GetMainWindowPosition();
+
+	if (position.x == -1)
+	{
+		position.x = (wxSystemSettings::GetMetric(wxSYS_SCREEN_X) - this->GetSize().x) / 2;
+	}
+
+	if (position.y == -1)
+	{
+		position.y = (wxSystemSettings::GetMetric(wxSYS_SCREEN_Y) - this->GetSize().y) / 2;
+	}
+
+	this->SetPosition(position);
 }
