@@ -9,11 +9,12 @@
 class Settings final
 {
 public:
-	static void Create();
 	[[nodiscard]] static wxPoint GetMainWindowPosition();
 	static void SetMainWindowPosition(const wxPoint& position);
 
 private:
 	static wxConfig* config;
 	static bool created;
+
+	static void Create();
 };
