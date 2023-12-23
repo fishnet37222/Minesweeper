@@ -12,5 +12,8 @@ public:
 	MainWindow();
 
 private:
+	wxMenuBar* menuBar{};
+
 	void InitUi();
+	void MenuBar_OnItemSelect(wxCommandEvent& event);
 };
