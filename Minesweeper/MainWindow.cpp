@@ -5,6 +5,7 @@
 #include "pch.h"
 #include "MainWindow.h"
 #include "Settings.h"
+#include "AboutDialog.h"
 
 enum class MenuId
 {
@@ -75,4 +76,29 @@ void MainWindow::InitUi()
 
 void MainWindow::MenuBar_OnItemSelect(wxCommandEvent& event)
 {
+	using enum MenuId;
+	switch (static_cast<MenuId>(event.GetId()))
+	{
+		case MenuId::ID_GAME_NEW:
+			break;
+		case MenuId::ID_GAME_BEGINNER:
+			break;
+		case MenuId::ID_GAME_INTERMEDIATE:
+			break;
+		case MenuId::ID_GAME_EXPERT:
+			break;
+		case MenuId::ID_GAME_CUSTOM:
+			break;
+		case MenuId::ID_GAME_BEST_TIMES:
+			break;
+		case MenuId::ID_HELP_HOW_TO_PLAY:
+			break;
+
+		case MenuId::ID_HELP_ABOUT:
+		{
+			AboutDialog aboutDialog(this);
+			aboutDialog.ShowModal();
+			break;
+		}
+	}
 }
