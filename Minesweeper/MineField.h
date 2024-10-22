@@ -33,6 +33,7 @@ private:
 	void MineField_OnLeftDown(wxMouseEvent& event);
 	void MineField_OnLeftUp(wxMouseEvent& event);
 	void MineField_OnRightUp(wxMouseEvent& event);
+	void MineField_OnLeftDoubleClick(wxMouseEvent& event);
 	void InitializeField();
 	[[nodiscard]] wxSize DoGetBestClientSize() const override;
 	void ExposeAdjacentCells(wxPoint cellLocation);

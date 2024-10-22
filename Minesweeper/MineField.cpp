@@ -24,6 +24,7 @@ MineField::MineField(wxWindow* parent)
 	Bind(wxEVT_LEFT_DOWN, &MineField::MineField_OnLeftDown, this);
 	Bind(wxEVT_LEFT_UP, &MineField::MineField_OnLeftUp, this);
 	Bind(wxEVT_RIGHT_UP, &MineField::MineField_OnRightUp, this);
+	Bind(wxEVT_LEFT_DCLICK, &MineField::MineField_OnLeftDoubleClick, this);
 	wxControl::SetBackgroundColour(wxTheColourDatabase->Find("LIGHT GREY"));
 	wxControl::SetForegroundColour(wxTheColourDatabase->Find("BLACK"));
 }
@@ -228,4 +229,49 @@ void MineField::ExposeAdjacentCells(const wxPoint cellLocation)
 	}
 
 	if (!hitMine) return;
+}
+
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
+void MineField::MineField_OnLeftDoubleClick(wxMouseEvent& event)
+{
+	const auto mouseLocation = event.GetLogicalPosition(wxWindowDC(this));
+	const auto gridX = mouseLocation.x / m_cellSize.GetWidth();
+	const auto gridY = mouseLocation.y / m_cellSize.GetHeight();
+
+	if (gridX < 0 || gridX >= m_gridSize.GetWidth() || gridY < 0 || gridY >= m_gridSize.GetHeight()) return;
+
+	const auto& [mine, flagged, exposed, clicked, adjacentMineCount] = m_field[gridY][gridX];
+
+	if (!exposed) return;
+	if (adjacentMineCount == 0) return;
+
+	auto adjacentFlags = 0;
+	for (auto y = gridY - 1; y <= gridY + 1; y++)
+	{
+		if (y < 0 || y >= m_gridSize.GetHeight()) continue;
+		for (auto x = gridX - 1; x <= gridX + 1; x++)
+		{
+			if (x < 0 || x >= m_gridSize.GetWidth()) continue;
+			if (x == gridX && y == gridY) continue;
+			if (m_field[y][x].flagged) adjacentFlags++;
+		}
+	}
+
+	if (adjacentMineCount != adjacentFlags) return;
+
+	for (auto y = gridY - 1; y <= gridY + 1; y++)
+	{
+		if (y < 0 || y >= m_gridSize.GetHeight()) continue;
+		for (auto x = gridX - 1; x <= gridX + 1; x++)
+		{
+			if (x < 0 || x >= m_gridSize.GetWidth()) continue;
+			if (x == gridX && y == gridY) continue;
+
+			if (m_field[y][x].exposed || m_field[y][x].flagged) continue;
+			m_field[y][x].exposed = true;
+			ExposeAdjacentCells({ x, y });
+		}
+	}
+
+	Refresh();
 }
