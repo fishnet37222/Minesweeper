@@ -42,6 +42,10 @@ partial class MainWindow
 		this.exitToolStripMenuItem = new ToolStripMenuItem();
 		this.howToPlayToolStripMenuItem = new ToolStripMenuItem();
 		this.aboutMinesweeperToolStripMenuItem = new ToolStripMenuItem();
+		this.m_btnNewGame = new Button();
+		this.m_ssdMinesLeft = new SevenSegmentDisplay();
+		this.m_ssdElapsedTime = new SevenSegmentDisplay();
+		this.m_mineField = new MineField();
 		m_menuStrip = new MenuStrip();
 		gameToolStripMenuItem = new ToolStripMenuItem();
 		helpToolStripMenuItem = new ToolStripMenuItem();
@@ -151,11 +155,57 @@ partial class MainWindow
 		this.aboutMinesweeperToolStripMenuItem.Size = new Size(180, 22);
 		this.aboutMinesweeperToolStripMenuItem.Text = "&About Minesweeper";
 		// 
+		// m_btnNewGame
+		// 
+		this.m_btnNewGame.Anchor = AnchorStyles.Top;
+		this.m_btnNewGame.AutoSize = true;
+		this.m_btnNewGame.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+		this.m_btnNewGame.Image = Properties.Resources.Smile1;
+		this.m_btnNewGame.Location = new Point(378, 30);
+		this.m_btnNewGame.Name = "m_btnNewGame";
+		this.m_btnNewGame.Padding = new Padding(3);
+		this.m_btnNewGame.Size = new Size(44, 44);
+		this.m_btnNewGame.TabIndex = 1;
+		this.m_btnNewGame.UseVisualStyleBackColor = true;
+		// 
+		// m_ssdMinesLeft
+		// 
+		this.m_ssdMinesLeft.Location = new Point(12, 27);
+		this.m_ssdMinesLeft.Name = "m_ssdMinesLeft";
+		this.m_ssdMinesLeft.Size = new Size(81, 51);
+		this.m_ssdMinesLeft.TabIndex = 2;
+		this.m_ssdMinesLeft.Text = "sevenSegmentDisplay1";
+		// 
+		// m_ssdElapsedTime
+		// 
+		this.m_ssdElapsedTime.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		this.m_ssdElapsedTime.Location = new Point(707, 27);
+		this.m_ssdElapsedTime.Name = "m_ssdElapsedTime";
+		this.m_ssdElapsedTime.Size = new Size(81, 51);
+		this.m_ssdElapsedTime.TabIndex = 3;
+		this.m_ssdElapsedTime.Text = "sevenSegmentDisplay2";
+		// 
+		// m_mineField
+		// 
+		this.m_mineField.Anchor = AnchorStyles.Top;
+		this.m_mineField.Location = new Point(287, 84);
+		this.m_mineField.Name = "m_mineField";
+		this.m_mineField.Size = new Size(226, 226);
+		this.m_mineField.TabIndex = 4;
+		this.m_mineField.Text = "mineField1";
+		this.m_mineField.MouseDown += this.MineField_MouseDown;
+		this.m_mineField.MouseUp += this.MineField_MouseUp;
+		this.m_mineField.Resize += this.MineField_Resize;
+		// 
 		// MainWindow
 		// 
 		this.AutoScaleDimensions = new SizeF(7F, 15F);
 		this.AutoScaleMode = AutoScaleMode.Font;
 		this.ClientSize = new Size(800, 450);
+		this.Controls.Add(this.m_mineField);
+		this.Controls.Add(this.m_ssdElapsedTime);
+		this.Controls.Add(this.m_ssdMinesLeft);
+		this.Controls.Add(this.m_btnNewGame);
 		this.Controls.Add(m_menuStrip);
 		this.FormBorderStyle = FormBorderStyle.FixedSingle;
 		this.Icon = (Icon)resources.GetObject("$this.Icon");
@@ -180,4 +230,8 @@ partial class MainWindow
 	private ToolStripMenuItem exitToolStripMenuItem;
 	private ToolStripMenuItem howToPlayToolStripMenuItem;
 	private ToolStripMenuItem aboutMinesweeperToolStripMenuItem;
+	private Button m_btnNewGame;
+	private SevenSegmentDisplay m_ssdMinesLeft;
+	private SevenSegmentDisplay m_ssdElapsedTime;
+	private MineField m_mineField;
 }
