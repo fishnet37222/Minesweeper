@@ -27,10 +27,10 @@ partial class MainWindow
 	{
 		MenuStrip m_menuStrip;
 		ToolStripMenuItem gameToolStripMenuItem;
-		ToolStripMenuItem helpToolStripMenuItem;
 		ToolStripSeparator toolStripMenuItem1;
 		ToolStripSeparator toolStripMenuItem2;
 		ToolStripSeparator toolStripMenuItem3;
+		ToolStripMenuItem helpToolStripMenuItem;
 		ToolStripSeparator toolStripMenuItem4;
 		var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
 		this.newToolStripMenuItem = new ToolStripMenuItem();
@@ -48,10 +48,10 @@ partial class MainWindow
 		this.m_mineField = new MineField();
 		m_menuStrip = new MenuStrip();
 		gameToolStripMenuItem = new ToolStripMenuItem();
-		helpToolStripMenuItem = new ToolStripMenuItem();
 		toolStripMenuItem1 = new ToolStripSeparator();
 		toolStripMenuItem2 = new ToolStripSeparator();
 		toolStripMenuItem3 = new ToolStripSeparator();
+		helpToolStripMenuItem = new ToolStripMenuItem();
 		toolStripMenuItem4 = new ToolStripSeparator();
 		m_menuStrip.SuspendLayout();
 		this.SuspendLayout();
@@ -73,70 +73,70 @@ partial class MainWindow
 		gameToolStripMenuItem.Size = new Size(50, 20);
 		gameToolStripMenuItem.Text = "&Game";
 		// 
+		// newToolStripMenuItem
+		// 
+		this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+		this.newToolStripMenuItem.ShortcutKeys = Keys.F2;
+		this.newToolStripMenuItem.Size = new Size(141, 22);
+		this.newToolStripMenuItem.Text = "&New";
+		// 
+		// toolStripMenuItem1
+		// 
+		toolStripMenuItem1.Name = "toolStripMenuItem1";
+		toolStripMenuItem1.Size = new Size(138, 6);
+		// 
+		// beginnerToolStripMenuItem
+		// 
+		this.beginnerToolStripMenuItem.Name = "beginnerToolStripMenuItem";
+		this.beginnerToolStripMenuItem.Size = new Size(141, 22);
+		this.beginnerToolStripMenuItem.Text = "&Beginner";
+		// 
+		// intermediateToolStripMenuItem
+		// 
+		this.intermediateToolStripMenuItem.Name = "intermediateToolStripMenuItem";
+		this.intermediateToolStripMenuItem.Size = new Size(141, 22);
+		this.intermediateToolStripMenuItem.Text = "&Intermediate";
+		// 
+		// expertToolStripMenuItem
+		// 
+		this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
+		this.expertToolStripMenuItem.Size = new Size(141, 22);
+		this.expertToolStripMenuItem.Text = "&Expert";
+		// 
+		// customToolStripMenuItem
+		// 
+		this.customToolStripMenuItem.Name = "customToolStripMenuItem";
+		this.customToolStripMenuItem.Size = new Size(141, 22);
+		this.customToolStripMenuItem.Text = "&Custom...";
+		// 
+		// toolStripMenuItem2
+		// 
+		toolStripMenuItem2.Name = "toolStripMenuItem2";
+		toolStripMenuItem2.Size = new Size(138, 6);
+		// 
+		// bestTimesToolStripMenuItem
+		// 
+		this.bestTimesToolStripMenuItem.Name = "bestTimesToolStripMenuItem";
+		this.bestTimesToolStripMenuItem.Size = new Size(141, 22);
+		this.bestTimesToolStripMenuItem.Text = "Best &Times...";
+		// 
+		// toolStripMenuItem3
+		// 
+		toolStripMenuItem3.Name = "toolStripMenuItem3";
+		toolStripMenuItem3.Size = new Size(138, 6);
+		// 
+		// exitToolStripMenuItem
+		// 
+		this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+		this.exitToolStripMenuItem.Size = new Size(141, 22);
+		this.exitToolStripMenuItem.Text = "E&xit";
+		// 
 		// helpToolStripMenuItem
 		// 
 		helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { this.howToPlayToolStripMenuItem, toolStripMenuItem4, this.aboutMinesweeperToolStripMenuItem });
 		helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 		helpToolStripMenuItem.Size = new Size(44, 20);
 		helpToolStripMenuItem.Text = "&Help";
-		// 
-		// newToolStripMenuItem
-		// 
-		this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-		this.newToolStripMenuItem.ShortcutKeys = Keys.F2;
-		this.newToolStripMenuItem.Size = new Size(180, 22);
-		this.newToolStripMenuItem.Text = "&New";
-		// 
-		// toolStripMenuItem1
-		// 
-		toolStripMenuItem1.Name = "toolStripMenuItem1";
-		toolStripMenuItem1.Size = new Size(177, 6);
-		// 
-		// beginnerToolStripMenuItem
-		// 
-		this.beginnerToolStripMenuItem.Name = "beginnerToolStripMenuItem";
-		this.beginnerToolStripMenuItem.Size = new Size(180, 22);
-		this.beginnerToolStripMenuItem.Text = "&Beginner";
-		// 
-		// intermediateToolStripMenuItem
-		// 
-		this.intermediateToolStripMenuItem.Name = "intermediateToolStripMenuItem";
-		this.intermediateToolStripMenuItem.Size = new Size(180, 22);
-		this.intermediateToolStripMenuItem.Text = "&Intermediate";
-		// 
-		// expertToolStripMenuItem
-		// 
-		this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
-		this.expertToolStripMenuItem.Size = new Size(180, 22);
-		this.expertToolStripMenuItem.Text = "&Expert";
-		// 
-		// customToolStripMenuItem
-		// 
-		this.customToolStripMenuItem.Name = "customToolStripMenuItem";
-		this.customToolStripMenuItem.Size = new Size(180, 22);
-		this.customToolStripMenuItem.Text = "&Custom...";
-		// 
-		// toolStripMenuItem2
-		// 
-		toolStripMenuItem2.Name = "toolStripMenuItem2";
-		toolStripMenuItem2.Size = new Size(177, 6);
-		// 
-		// bestTimesToolStripMenuItem
-		// 
-		this.bestTimesToolStripMenuItem.Name = "bestTimesToolStripMenuItem";
-		this.bestTimesToolStripMenuItem.Size = new Size(180, 22);
-		this.bestTimesToolStripMenuItem.Text = "Best &Times...";
-		// 
-		// toolStripMenuItem3
-		// 
-		toolStripMenuItem3.Name = "toolStripMenuItem3";
-		toolStripMenuItem3.Size = new Size(177, 6);
-		// 
-		// exitToolStripMenuItem
-		// 
-		this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-		this.exitToolStripMenuItem.Size = new Size(180, 22);
-		this.exitToolStripMenuItem.Text = "E&xit";
 		// 
 		// howToPlayToolStripMenuItem
 		// 
@@ -213,6 +213,8 @@ partial class MainWindow
 		this.MaximizeBox = false;
 		this.Name = "MainWindow";
 		this.Text = "Minesweeper";
+		this.FormClosing += this.MainWindow_FormClosing;
+		this.Load += this.MainWindow_Load;
 		m_menuStrip.ResumeLayout(false);
 		m_menuStrip.PerformLayout();
 		this.ResumeLayout(false);

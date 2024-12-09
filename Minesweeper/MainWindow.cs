@@ -42,4 +42,24 @@ public partial class MainWindow : Form
 		if (e.Button != MouseButtons.Left) return;
 		m_btnNewGame.Image = Resources.Smile1;
 	}
+
+	private void MainWindow_Load(object sender, EventArgs e)
+	{
+		var location = Settings.MainWindowLocation;
+
+		if (location == null)
+		{
+			var workingArea = Screen.FromControl(this).WorkingArea;
+			var locationX = workingArea.Width / 2 - Width / 2;
+			var locationY = workingArea.Height / 2 - Height / 2;
+			location = new(locationX, locationY);
+		}
+
+		Location = location.Value;
+	}
+
+	private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+	{
+		Settings.MainWindowLocation = Location;
+	}
 }
