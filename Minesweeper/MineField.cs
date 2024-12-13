@@ -39,6 +39,8 @@ public sealed partial class MineField : Control
 	private List<Point> m_mineLocations;
 	private int m_mineCount = 10;
 	private Random m_random = new(RandomNumberGenerator.GetInt32(int.MinValue, int.MaxValue));
+	private Point m_hoveredCell = new(-1, -1);
+	private bool m_mouseLeftDown;
 
 	public MineField()
 	{
@@ -69,7 +71,38 @@ public sealed partial class MineField : Control
 
 				var cell = m_cells[cellX, cellY];
 
-				if (!cell.IsRevealed)
+				var isHoveredCell = m_mouseLeftDown && m_hoveredCell.X == cellX && m_hoveredCell.Y == cellY;
+
+				if (cell.IsRevealed || (isHoveredCell && !cell.IsFlagged))
+				{
+					if (!isHoveredCell)
+					{
+						if (cell is { IsMine: true, WasClicked: true })
+						{
+							g.FillRectangle(new SolidBrush(Color.Red), cellOriginX, cellOriginY, m_cellSize.Width,
+								m_cellSize.Height);
+						}
+
+						if (cell.IsMine)
+						{
+							g.DrawImage(Resources.Explosion, cellOriginX, cellOriginY, m_cellSize.Width,
+								m_cellSize.Height);
+						}
+						else if (cell.AdjacentMineCount > 0)
+						{
+							var text = cell.AdjacentMineCount.ToString();
+							var font = new Font(Font, FontStyle.Bold);
+							var textSize = g.MeasureString(text, font);
+
+							g.DrawString(text, font, new SolidBrush(ForeColor),
+								cellOriginX + m_cellSize.Width / 2f - textSize.Width / 2,
+								cellOriginY + m_cellSize.Height / 2f - textSize.Height / 2);
+						}
+					}
+
+					g.DrawRectangle(new(ForeColor), cellOriginX, cellOriginY, m_cellSize.Width, m_cellSize.Height);
+				}
+				else
 				{
 					for (var i = 0; i < 3; i++)
 					{
@@ -87,30 +120,6 @@ public sealed partial class MineField : Control
 					{
 						g.DrawImage(Resources.Flag, cellOriginX + 3, cellOriginY + 3, m_cellSize.Width - 6, m_cellSize.Height - 6);
 					}
-				}
-				else
-				{
-					if (cell is { IsMine: true, WasClicked: true })
-					{
-						g.FillRectangle(new SolidBrush(Color.Red), cellOriginX, cellOriginY, m_cellSize.Width, m_cellSize.Height);
-					}
-
-					if (cell.IsMine)
-					{
-						g.DrawImage(Resources.Explosion, cellOriginX, cellOriginY, m_cellSize.Width, m_cellSize.Height);
-					}
-					else if (cell.AdjacentMineCount > 0)
-					{
-						var text = cell.AdjacentMineCount.ToString();
-						var font = new Font(Font, FontStyle.Bold);
-						var textSize = g.MeasureString(text, font);
-
-						g.DrawString(text, font, new SolidBrush(ForeColor),
-							cellOriginX + m_cellSize.Width / 2f - textSize.Width / 2,
-							cellOriginY + m_cellSize.Height / 2f - textSize.Height / 2);
-					}
-
-					g.DrawRectangle(new(ForeColor), cellOriginX, cellOriginY, m_cellSize.Width, m_cellSize.Height);
 				}
 			}
 		}
@@ -217,17 +226,17 @@ public sealed partial class MineField : Control
 		switch (e.Button)
 		{
 			case MouseButtons.Right:
-			{
-				m_cells[cellX, cellY].IsFlagged = !m_cells[cellX, cellY].IsFlagged;
-				break;
-			}
+				{
+					m_cells[cellX, cellY].IsFlagged = !m_cells[cellX, cellY].IsFlagged;
+					break;
+				}
 
 			case MouseButtons.Left:
-			{
-				if (m_cells[cellX, cellY].IsFlagged || m_cells[cellX, cellY].IsRevealed) return;
-				RevealCells(new(cellX, cellY));
-				break;
-			}
+				{
+					if (m_cells[cellX, cellY].IsFlagged || m_cells[cellX, cellY].IsRevealed) return;
+					RevealCells(new(cellX, cellY));
+					break;
+				}
 
 			case MouseButtons.Middle:
 			case MouseButtons.None:
@@ -243,13 +252,36 @@ public sealed partial class MineField : Control
 	protected override void OnMouseDown(MouseEventArgs e)
 	{
 		base.OnMouseDown(e);
+		m_mouseLeftDown = e.Button == MouseButtons.Left;
+
+		var cellX = e.Location.X / m_cellSize.Width;
+		var cellY = e.Location.Y / m_cellSize.Height;
+
+		m_hoveredCell = new(cellX, cellY);
+		Refresh();
 		Capture = true;
 	}
 
 	protected override void OnMouseUp(MouseEventArgs e)
 	{
 		base.OnMouseUp(e);
+		m_mouseLeftDown = false;
+		Refresh();
 		Capture = false;
+	}
+
+	protected override void OnMouseMove(MouseEventArgs e)
+	{
+		base.OnMouseMove(e);
+
+		var cellX = e.Location.X / m_cellSize.Width;
+		var cellY = e.Location.Y / m_cellSize.Height;
+
+		if (e.Location.X < 0) cellX = -1;
+		if (e.Location.Y < 0) cellY = -1;
+
+		m_hoveredCell = new(cellX, cellY);
+		Refresh();
 	}
 
 	protected override void OnMouseDoubleClick(MouseEventArgs e)
