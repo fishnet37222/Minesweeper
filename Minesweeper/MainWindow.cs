@@ -8,6 +8,10 @@ namespace Minesweeper;
 
 public partial class MainWindow : Form
 {
+	private Difficulty m_difficulty = Difficulty.Beginner;
+	private Size m_customFieldSize = new(9, 9);
+	private int m_customMineCount = 10;
+
 	public MainWindow()
 	{
 		InitializeComponent();
@@ -56,10 +60,95 @@ public partial class MainWindow : Form
 		}
 
 		Location = location.Value;
+
+		m_difficulty = Settings.Difficulty ?? Difficulty.Beginner;
+		// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+		switch (m_difficulty)
+		{
+			case Difficulty.Beginner:
+			{
+				beginnerToolStripMenuItem.Checked = true;
+				break;
+			}
+
+			case Difficulty.Intermediate:
+			{
+				intermediateToolStripMenuItem.Checked = true;
+				break;
+			}
+
+			case Difficulty.Expert:
+			{
+				expertToolStripMenuItem.Checked = true;
+				break;
+			}
+
+			case Difficulty.Custom:
+			{
+				customToolStripMenuItem.Checked = true;
+				m_customFieldSize = Settings.CustomFieldSize ?? new(9, 9);
+				m_customMineCount = Settings.CustomMineCount ?? 10;
+				break;
+			}
+		}
 	}
 
 	private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
 	{
 		Settings.MainWindowLocation = Location;
+		Settings.Difficulty = m_difficulty;
+		Settings.CustomFieldSize = m_customFieldSize;
+		Settings.CustomMineCount = m_customMineCount;
+	}
+
+	private void BeginnerToolStripMenuItem_Click(object sender, EventArgs e)
+	{
+		UncheckDifficultyMenuItems();
+		m_difficulty = Difficulty.Beginner;
+		beginnerToolStripMenuItem.Checked = true;
+	}
+
+	private void IntermediateToolStripMenuItem_Click(object sender, EventArgs e)
+	{
+		UncheckDifficultyMenuItems();
+		m_difficulty = Difficulty.Intermediate;
+		intermediateToolStripMenuItem.Checked = true;
+	}
+
+	private void ExpertToolStripMenuItem_Click(object sender, EventArgs e)
+	{
+		UncheckDifficultyMenuItems();
+		m_difficulty = Difficulty.Expert;
+		expertToolStripMenuItem.Checked = true;
+	}
+
+	private void CustomToolStripMenuItem_Click(object sender, EventArgs e)
+	{
+		var dlg = new CustomDifficultyDialog();
+		dlg.CustomFieldWidth = m_customFieldSize.Width;
+		dlg.CustomFieldHeight = m_customFieldSize.Height;
+		dlg.CustomMineCount = m_customMineCount;
+		var result = dlg.ShowDialog(this);
+
+		if (result == DialogResult.Cancel) return;
+
+		UncheckDifficultyMenuItems();
+		m_difficulty = Difficulty.Custom;
+		customToolStripMenuItem.Checked = true;
+		m_customFieldSize = new(dlg.CustomFieldWidth, dlg.CustomFieldHeight);
+		m_customMineCount = dlg.CustomMineCount;
+	}
+
+	private void UncheckDifficultyMenuItems()
+	{
+		beginnerToolStripMenuItem.Checked = false;
+		intermediateToolStripMenuItem.Checked = false;
+		expertToolStripMenuItem.Checked = false;
+		customToolStripMenuItem.Checked = false;
+	}
+
+	private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+	{
+		Close();
 	}
 }
