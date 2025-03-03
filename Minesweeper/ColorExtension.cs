@@ -22,7 +22,7 @@ public static class ColorExtension
 		iAlpha = Math.Max(iAlpha, 0);
 		iAlpha = Math.Min(iAlpha, 200);
 
-		var alpha = (double)iAlpha;
+		var alpha = (iAlpha - 100.0) / 100.0;
 
 		uint bg;
 		if (iAlpha > 100)
