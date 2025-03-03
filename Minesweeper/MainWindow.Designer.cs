@@ -37,6 +37,8 @@ partial class MainWindow
 		var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
 		this.m_menuStrip = new MenuStrip();
 		this.m_btnNewGame = new Button();
+		this.m_ssdMinesLeft = new SevenSegmentDisplay();
+		this.m_ssdElapsedTime = new SevenSegmentDisplay();
 		gameToolStripMenuItem = new ToolStripMenuItem();
 		helpToolStripMenuItem = new ToolStripMenuItem();
 		this.m_menuStrip.SuspendLayout();
@@ -77,11 +79,30 @@ partial class MainWindow
 		this.m_btnNewGame.TabIndex = 1;
 		this.m_btnNewGame.UseVisualStyleBackColor = true;
 		// 
+		// m_ssdMinesLeft
+		// 
+		this.m_ssdMinesLeft.Location = new Point(12, 29);
+		this.m_ssdMinesLeft.Name = "m_ssdMinesLeft";
+		this.m_ssdMinesLeft.Size = new Size(65, 40);
+		this.m_ssdMinesLeft.TabIndex = 2;
+		this.m_ssdMinesLeft.Text = "sevenSegmentDisplay1";
+		// 
+		// m_ssdElapsedTime
+		// 
+		this.m_ssdElapsedTime.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		this.m_ssdElapsedTime.Location = new Point(723, 29);
+		this.m_ssdElapsedTime.Name = "m_ssdElapsedTime";
+		this.m_ssdElapsedTime.Size = new Size(65, 40);
+		this.m_ssdElapsedTime.TabIndex = 3;
+		this.m_ssdElapsedTime.Text = "sevenSegmentDisplay2";
+		// 
 		// MainWindow
 		// 
 		this.AutoScaleDimensions = new SizeF(7F, 15F);
 		this.AutoScaleMode = AutoScaleMode.Font;
 		this.ClientSize = new Size(800, 450);
+		this.Controls.Add(this.m_ssdElapsedTime);
+		this.Controls.Add(this.m_ssdMinesLeft);
 		this.Controls.Add(this.m_btnNewGame);
 		this.Controls.Add(this.m_menuStrip);
 		this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -101,4 +122,6 @@ partial class MainWindow
 
 	private MenuStrip m_menuStrip;
 	private Button m_btnNewGame;
+	private SevenSegmentDisplay m_ssdMinesLeft;
+	private SevenSegmentDisplay m_ssdElapsedTime;
 }
