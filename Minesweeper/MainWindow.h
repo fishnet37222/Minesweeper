@@ -9,4 +9,7 @@ class MainWindow final : public wxFrame
 {
 public:
 	MainWindow();
+
+private:
+	void MainWindow_OnClose(wxCloseEvent& event);
 };
