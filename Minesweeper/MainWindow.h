@@ -11,5 +11,8 @@ public:
 	MainWindow();
 
 private:
+	wxMenuBar* m_menuBar{};
+
 	void MainWindow_OnClose(wxCloseEvent& event);
+	void MenuBar_OnItemSelect(wxCommandEvent& event);
 };
