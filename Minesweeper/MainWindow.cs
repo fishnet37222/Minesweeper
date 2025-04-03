@@ -15,4 +15,26 @@ public partial class MainWindow : Form
 	{
 		Close();
 	}
+
+	private void MainWindow_Load(object sender, EventArgs e)
+	{
+		var location = Settings.MainWindowLocation;
+
+		if (location == null)
+		{
+			var workArea = Screen.FromControl(this).WorkingArea;
+
+			var x = workArea.Width / 2 - Width / 2;
+			var y = workArea.Height / 2 - Height / 2;
+
+			location = new(x, y);
+		}
+
+		Location = location.Value;
+	}
+
+	private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+	{
+		Settings.MainWindowLocation = Location;
+	}
 }

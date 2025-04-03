@@ -69,58 +69,58 @@ partial class MainWindow
 		// 
 		this.newToolStripMenuItem.Name = "newToolStripMenuItem";
 		this.newToolStripMenuItem.ShortcutKeys = Keys.F2;
-		this.newToolStripMenuItem.Size = new Size(180, 22);
+		this.newToolStripMenuItem.Size = new Size(141, 22);
 		this.newToolStripMenuItem.Text = "&New";
 		// 
 		// toolStripMenuItem2
 		// 
 		toolStripMenuItem2.Name = "toolStripMenuItem2";
-		toolStripMenuItem2.Size = new Size(177, 6);
+		toolStripMenuItem2.Size = new Size(138, 6);
 		// 
 		// beginnerToolStripMenuItem
 		// 
 		this.beginnerToolStripMenuItem.Name = "beginnerToolStripMenuItem";
-		this.beginnerToolStripMenuItem.Size = new Size(180, 22);
+		this.beginnerToolStripMenuItem.Size = new Size(141, 22);
 		this.beginnerToolStripMenuItem.Text = "&Beginner";
 		// 
 		// intermediateToolStripMenuItem
 		// 
 		this.intermediateToolStripMenuItem.Name = "intermediateToolStripMenuItem";
-		this.intermediateToolStripMenuItem.Size = new Size(180, 22);
+		this.intermediateToolStripMenuItem.Size = new Size(141, 22);
 		this.intermediateToolStripMenuItem.Text = "&Intermediate";
 		// 
 		// expertToolStripMenuItem
 		// 
 		this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
-		this.expertToolStripMenuItem.Size = new Size(180, 22);
+		this.expertToolStripMenuItem.Size = new Size(141, 22);
 		this.expertToolStripMenuItem.Text = "&Expert";
 		// 
 		// customToolStripMenuItem
 		// 
 		this.customToolStripMenuItem.Name = "customToolStripMenuItem";
-		this.customToolStripMenuItem.Size = new Size(180, 22);
+		this.customToolStripMenuItem.Size = new Size(141, 22);
 		this.customToolStripMenuItem.Text = "&Custom...";
 		// 
 		// toolStripMenuItem3
 		// 
 		toolStripMenuItem3.Name = "toolStripMenuItem3";
-		toolStripMenuItem3.Size = new Size(177, 6);
+		toolStripMenuItem3.Size = new Size(138, 6);
 		// 
 		// bestTimesToolStripMenuItem
 		// 
 		this.bestTimesToolStripMenuItem.Name = "bestTimesToolStripMenuItem";
-		this.bestTimesToolStripMenuItem.Size = new Size(180, 22);
+		this.bestTimesToolStripMenuItem.Size = new Size(141, 22);
 		this.bestTimesToolStripMenuItem.Text = "Best &Times...";
 		// 
 		// toolStripMenuItem4
 		// 
 		toolStripMenuItem4.Name = "toolStripMenuItem4";
-		toolStripMenuItem4.Size = new Size(177, 6);
+		toolStripMenuItem4.Size = new Size(138, 6);
 		// 
 		// exitToolStripMenuItem
 		// 
 		this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-		this.exitToolStripMenuItem.Size = new Size(180, 22);
+		this.exitToolStripMenuItem.Size = new Size(141, 22);
 		this.exitToolStripMenuItem.Text = "E&xit";
 		this.exitToolStripMenuItem.Click += this.ExitToolStripMenuItem_Click;
 		// 
@@ -159,6 +159,8 @@ partial class MainWindow
 		this.MainMenuStrip = menuStrip;
 		this.Name = "MainWindow";
 		this.Text = "Minesweeper";
+		this.FormClosing += this.MainWindow_FormClosing;
+		this.Load += this.MainWindow_Load;
 		menuStrip.ResumeLayout(false);
 		menuStrip.PerformLayout();
 		this.ResumeLayout(false);
