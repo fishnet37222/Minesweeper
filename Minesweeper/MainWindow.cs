@@ -10,4 +10,9 @@ public partial class MainWindow : Form
 	{
 		InitializeComponent();
 	}
+
+	private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+	{
+		Close();
+	}
 }
