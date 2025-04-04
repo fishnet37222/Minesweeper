@@ -38,6 +38,9 @@ partial class MainWindow
 		this.exitToolStripMenuItem = new ToolStripMenuItem();
 		this.howToPlayToolStripMenuItem = new ToolStripMenuItem();
 		this.aboutMinesweeperToolStripMenuItem = new ToolStripMenuItem();
+		this.btnNewGame = new Button();
+		this.ssdMinesLeft = new SevenSegmentDisplay();
+		this.ssdElapsedTime = new SevenSegmentDisplay();
 		menuStrip = new MenuStrip();
 		gameToolStripMenuItem = new ToolStripMenuItem();
 		toolStripMenuItem2 = new ToolStripSeparator();
@@ -148,11 +151,44 @@ partial class MainWindow
 		this.aboutMinesweeperToolStripMenuItem.Size = new Size(189, 22);
 		this.aboutMinesweeperToolStripMenuItem.Text = "&About Minesweeper...";
 		// 
+		// btnNewGame
+		// 
+		this.btnNewGame.Anchor = AnchorStyles.Top;
+		this.btnNewGame.AutoSize = true;
+		this.btnNewGame.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+		this.btnNewGame.Image = Properties.Resources.smile_1;
+		this.btnNewGame.Location = new Point(377, 30);
+		this.btnNewGame.Name = "btnNewGame";
+		this.btnNewGame.Padding = new Padding(4);
+		this.btnNewGame.Size = new Size(46, 46);
+		this.btnNewGame.TabIndex = 1;
+		this.btnNewGame.UseVisualStyleBackColor = true;
+		// 
+		// ssdMinesLeft
+		// 
+		this.ssdMinesLeft.Location = new Point(12, 27);
+		this.ssdMinesLeft.Name = "ssdMinesLeft";
+		this.ssdMinesLeft.Size = new Size(81, 52);
+		this.ssdMinesLeft.TabIndex = 2;
+		this.ssdMinesLeft.Text = "sevenSegmentDisplay1";
+		// 
+		// ssdElapsedTime
+		// 
+		this.ssdElapsedTime.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		this.ssdElapsedTime.Location = new Point(707, 27);
+		this.ssdElapsedTime.Name = "ssdElapsedTime";
+		this.ssdElapsedTime.Size = new Size(81, 52);
+		this.ssdElapsedTime.TabIndex = 3;
+		this.ssdElapsedTime.Text = "sevenSegmentDisplay2";
+		// 
 		// MainWindow
 		// 
 		this.AutoScaleDimensions = new SizeF(7F, 15F);
 		this.AutoScaleMode = AutoScaleMode.Font;
 		this.ClientSize = new Size(800, 450);
+		this.Controls.Add(this.ssdElapsedTime);
+		this.Controls.Add(this.ssdMinesLeft);
+		this.Controls.Add(this.btnNewGame);
 		this.Controls.Add(menuStrip);
 		this.FormBorderStyle = FormBorderStyle.FixedSingle;
 		this.Icon = (Icon)resources.GetObject("$this.Icon");
@@ -178,4 +214,7 @@ partial class MainWindow
 	private ToolStripMenuItem exitToolStripMenuItem;
 	private ToolStripMenuItem howToPlayToolStripMenuItem;
 	private ToolStripMenuItem aboutMinesweeperToolStripMenuItem;
+	private Button btnNewGame;
+	private SevenSegmentDisplay ssdMinesLeft;
+	private SevenSegmentDisplay ssdElapsedTime;
 }
