@@ -14,4 +14,5 @@ private:
 	wxMenuBar* m_menuBar{};
 
 	void MenuBar_OnItemSelect(wxCommandEvent& event);
+	void MainWindow_OnClose(wxCloseEvent& event);
 };

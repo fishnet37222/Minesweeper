@@ -5,6 +5,8 @@
 #include "pch.h"
 #include "MainWindow.h"
 #include "App.h"
+#include <wx/config.h>
+#include <sstream>
 
 enum MenuId : uint16_t
 {
@@ -50,7 +52,19 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, wxGetApp().GetAppName(), w
 	wxFrame::SetMenuBar(m_menuBar);
 	m_menuBar->Bind(wxEVT_MENU, &MainWindow::MenuBar_OnItemSelect, this);
 
-	CenterOnScreen();
+	const auto* config = wxConfig::Get();
+	const auto x = config->ReadLong("MainWindowPosX", -1);
+	const auto y = config->ReadLong("MainWindowPosY", -1);
+	if (x != -1 && y != -1)
+	{
+		SetPosition({ x, y });
+	}
+	else
+	{
+		CenterOnScreen();
+	}
+
+	Bind(wxEVT_CLOSE_WINDOW, &MainWindow::MainWindow_OnClose, this);
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
@@ -68,4 +82,13 @@ void MainWindow::MenuBar_OnItemSelect(wxCommandEvent& event)
 		default:
 			break;
 	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::MainWindow_OnClose([[maybe_unused]] wxCloseEvent& event)
+{
+	auto* config = wxConfig::Get();
+	config->Write("MainWindowPosX", GetPosition().x);
+	config->Write("MainWindowPosY", GetPosition().y);
+	event.Skip();
 }
