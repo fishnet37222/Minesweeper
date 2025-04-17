@@ -22,9 +22,13 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 	const wxAutoBufferedPaintDC dc(this);
 	const auto gc = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(dc));
 
+	gc->SetBrush(GetParent()->GetBackgroundColour());
+	gc->SetPen(GetParent()->GetBackgroundColour());
+	gc->DrawRectangle(0, 0, GetClientSize().GetWidth(), GetClientSize().GetHeight());
+
 	gc->SetBrush(GetBackgroundColour());
 	gc->SetPen(GetBackgroundColour());
-	gc->DrawRectangle(0, 0, GetClientSize().GetWidth(), GetClientSize().GetHeight());
+	gc->DrawRoundedRectangle(0, 0, GetClientSize().GetWidth() - 1, GetClientSize().GetHeight() - 1, 4);
 
 	auto valueText = std::to_string(m_value);
 
