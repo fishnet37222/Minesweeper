@@ -5,11 +5,11 @@
 #include "MainWindow.h"
 
 #ifdef __linux__
-#include "bitmaps/bomb16.xpm"
-#include "bitmaps/bomb32.xpm"
-#include "bitmaps/bomb64.xpm"
-#include "bitmaps/bomb128.xpm"
-#include "bitmaps/bomb256.xpm"
+#include "bitmaps/bomb-16.xpm"
+#include "bitmaps/bomb-32.xpm"
+#include "bitmaps/bomb-64.xpm"
+#include "bitmaps/bomb-128.xpm"
+#include "bitmaps/bomb-256.xpm"
 #endif
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPosition, wxDefaultSize,
