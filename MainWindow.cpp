@@ -29,4 +29,6 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 #endif
 
 	wxFrame::SetIcons(icons);
+
+	CenterOnScreen();
 }
