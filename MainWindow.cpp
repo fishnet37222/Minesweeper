@@ -5,11 +5,11 @@
 #include "MainWindow.h"
 
 #ifdef __linux__
-#include "bitmaps/bomb128.xpm"
-#include "bitmaps/bomb16.xpm"
-#include "bitmaps/bomb256.xpm"
-#include "bitmaps/bomb32.xpm"
-#include "bitmaps/bomb64.xpm"
+#include "bitmaps/bomb-128.xpm"
+#include "bitmaps/bomb-16.xpm"
+#include "bitmaps/bomb-256.xpm"
+#include "bitmaps/bomb-32.xpm"
+#include "bitmaps/bomb-64.xpm"
 #endif
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX))
@@ -21,11 +21,11 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 #ifdef _WINDOWS
 	icons = wxIconBundle("APP_ICON", nullptr);
 #elif defined(__linux__)
-	icons.AddIcon(wxIcon(bomb16_xpm));
-	icons.AddIcon(wxIcon(bomb32_xpm));
-	icons.AddIcon(wxIcon(bomb64_xpm));
-	icons.AddIcon(wxIcon(bomb128_xpm));
-	icons.AddIcon(wxIcon(bomb256_xpm));
+	icons.AddIcon(wxIcon(bomb_16_xpm));
+	icons.AddIcon(wxIcon(bomb_32_xpm));
+	icons.AddIcon(wxIcon(bomb_64_xpm));
+	icons.AddIcon(wxIcon(bomb_128_xpm));
+	icons.AddIcon(wxIcon(bomb_256_xpm));
 #endif
 	
 	wxFrame::SetIcons(icons);
