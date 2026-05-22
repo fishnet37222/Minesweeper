@@ -12,6 +12,11 @@
 #include "bitmaps/bomb-64.xpm"
 #endif
 
+#include "bitmaps/smile-1.xpm"
+#include "bitmaps/smile-2.xpm"
+#include "bitmaps/smile-3.xpm"
+#include "bitmaps/smile-4.xpm"
+
 enum
 {
 	ID_GAME_NEW = wxID_HIGHEST + 1,
@@ -59,6 +64,23 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	mnuHelp->Append(ID_HELP_ABOUT, "&About Minesweeper");
 	m_menuBar->Append(mnuHelp, "&Help");
 	wxFrame::SetMenuBar(m_menuBar);
+
+	auto* szrMainOuter = new wxBoxSizer(wxHORIZONTAL);
+	szrMainOuter->AddSpacer(10);
+	auto* szrMainInner = new wxBoxSizer(wxVERTICAL);
+	szrMainInner->AddSpacer(5);
+	auto* szrTop = new wxBoxSizer(wxHORIZONTAL);
+	szrTop->AddStretchSpacer(1);
+	szrTop->AddSpacer(5);
+	m_btnNewGame = new wxBitmapButton(this, wxID_ANY, wxBitmap(smile_1_xpm));
+	szrTop->Add(m_btnNewGame, wxSizerFlags(0).CenterVertical());
+	szrTop->AddSpacer(5);
+	szrTop->AddStretchSpacer(1);
+	szrMainInner->Add(szrTop, wxSizerFlags(0).Expand());
+	szrMainInner->AddSpacer(10);
+	szrMainOuter->Add(szrMainInner, wxSizerFlags(1).Expand());
+	szrMainOuter->AddSpacer(10);
+	SetSizerAndFit(szrMainOuter);
 
 		CenterOnScreen();
 }
