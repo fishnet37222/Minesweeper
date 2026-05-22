@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "MainWindow.h"
+#include <wx/config.h>
 
 #ifdef __linux__
 #include "bitmaps/bomb-128.xpm"
@@ -82,5 +83,26 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	szrMainOuter->AddSpacer(10);
 	SetSizerAndFit(szrMainOuter);
 
+	const auto savedPositionX = static_cast<int>(wxConfig::Get()->ReadLong("MainWindowPositionX", -1));
+	const auto savedPositionY = static_cast<int>(wxConfig::Get()->ReadLong("MainWindowPositionY", -1));
+
+	if (savedPositionX != -1 && savedPositionY != -1)
+	{
+		SetPosition(wxPoint(savedPositionX, savedPositionY));
+	}
+	else
+	{
 		CenterOnScreen();
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::MainWindow_OnClose(wxCloseEvent& evt)
+{
+	auto* config = wxConfig::Get();
+	const auto position = GetPosition();
+	config->Write("MainWindowPositionX", position.x);
+	config->Write("MainWindowPositionY", position.y);
+	delete config;
+	evt.Skip();
 }

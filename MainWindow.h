@@ -13,4 +13,6 @@ public:
 private:
 	wxMenuBar* m_menuBar{};
 	wxBitmapButton* m_btnNewGame{};
+
+	void MainWindow_OnClose(wxCloseEvent& evt);
 };
