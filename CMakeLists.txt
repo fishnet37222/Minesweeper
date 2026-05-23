@@ -37,3 +37,11 @@ endif()
 
 target_link_libraries(Minesweeper PRIVATE ${wxWidgets_LIBRARIES})
 target_precompile_headers(Minesweeper PRIVATE <wx/wxprec.h>)
+
+if (WIN32)
+	add_custom_command(
+		TARGET Minesweeper
+		POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/Microsoft.Web.WebView2.Core.dll $<TARGET_FILE_DIR:Minesweeper>
+	)
+endif()
