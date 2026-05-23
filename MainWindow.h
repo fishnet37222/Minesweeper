@@ -15,4 +15,5 @@ private:
 	wxBitmapButton* m_btnNewGame{};
 
 	void MainWindow_OnClose(wxCloseEvent& evt);
+	void MenuBar_OnItemSelect(wxCommandEvent& event);
 };

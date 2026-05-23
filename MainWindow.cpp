@@ -65,6 +65,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	mnuHelp->Append(ID_HELP_ABOUT, "&About Minesweeper");
 	m_menuBar->Append(mnuHelp, "&Help");
 	wxFrame::SetMenuBar(m_menuBar);
+	m_menuBar->Bind(wxEVT_MENU, &MainWindow::MenuBar_OnItemSelect, this);
 
 	auto* szrMainOuter = new wxBoxSizer(wxHORIZONTAL);
 	szrMainOuter->AddSpacer(10);
@@ -106,4 +107,21 @@ void MainWindow::MainWindow_OnClose(wxCloseEvent& evt)
 	wxConfig::Get()->Write("MainWindowPositionY", position.y);
 	wxConfig::Get()->Flush();
 	evt.Skip();
+}
+
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
+void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
+{
+	switch (event.GetId())
+	{
+		case ID_GAME_EXIT:
+		{
+			Close();
+			break;
+		}
+
+		default:
+			break;
+	}
+
 }
