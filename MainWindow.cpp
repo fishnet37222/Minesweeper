@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+#include "AboutDialog.h"
 #include "MainWindow.h"
 #include <wx/config.h>
 
@@ -122,6 +123,14 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 		case ID_GAME_EXIT:
 		{
 			Close();
+			break;
+		}
+
+		case ID_HELP_ABOUT:
+		{
+			AboutDialog dlg(this);
+			dlg.ShowModal();
+
 			break;
 		}
 
