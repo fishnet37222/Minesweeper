@@ -3,6 +3,7 @@
   "configurePresets": [
     {
       "name": "default",
+      "hidden": true,
       "inherits": "windows-base",
       "environment": {
         "VCPKG_ROOT": "C:/vcpkg"
