@@ -4,6 +4,7 @@
 
 #include "App.h"
 #include "MainWindow.h"
+#include <wx/stdpaths.h>
 
 wxIMPLEMENT_APP(App);
 
@@ -16,6 +17,10 @@ bool App::OnInit()
 
 	SetVendorName("FishNetSoft");
 	SetAppName("Minesweeper");
+
+#ifdef __linux__
+	wxStandardPaths::Get().SetFileLayout(wxStandardPathsBase::FileLayout_XDG);
+#endif
 
 	auto* mainWindow = new MainWindow();
 	SetTopWindow(mainWindow);
