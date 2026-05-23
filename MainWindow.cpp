@@ -101,10 +101,9 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 // ReSharper disable once CppMemberFunctionMayBeConst
 void MainWindow::MainWindow_OnClose(wxCloseEvent& evt)
 {
-	auto* config = wxConfig::Get();
 	const auto position = GetPosition();
-	config->Write("MainWindowPositionX", position.x);
-	config->Write("MainWindowPositionY", position.y);
-	delete config;
+	wxConfig::Get()->Write("MainWindowPositionX", position.x);
+	wxConfig::Get()->Write("MainWindowPositionY", position.y);
+	wxConfig::Get()->Flush();
 	evt.Skip();
 }
