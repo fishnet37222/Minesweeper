@@ -45,7 +45,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	icons.AddIcon(wxIcon(bomb_128_xpm));
 	icons.AddIcon(wxIcon(bomb_256_xpm));
 #endif
-	
+
 	wxFrame::SetIcons(icons);
 
 	m_menuBar = new wxMenuBar();
@@ -85,6 +85,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	SetSizerAndFit(szrMainOuter);
 
 	const auto savedPositionX = static_cast<int>(wxConfig::Get()->ReadLong("MainWindowPositionX", -1));
+	// ReSharper disable once CppTooWideScopeInitStatement
 	const auto savedPositionY = static_cast<int>(wxConfig::Get()->ReadLong("MainWindowPositionY", -1));
 
 	if (savedPositionX != -1 && savedPositionY != -1)
