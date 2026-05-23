@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
+#include "SevenSegmentDisplay.h"
 #include <wx/wx.h>
 
 class MainWindow final : public wxFrame
@@ -13,6 +14,8 @@ public:
 private:
 	wxMenuBar* m_menuBar{};
 	wxBitmapButton* m_btnNewGame{};
+	SevenSegmentDisplay* m_ssdUnflaggedMineCount{};
+	SevenSegmentDisplay* m_ssdElapsedSeconds{};
 
 	void MainWindow_OnClose(wxCloseEvent& evt);
 	void MenuBar_OnItemSelect(wxCommandEvent& event);

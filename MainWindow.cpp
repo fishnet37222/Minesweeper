@@ -72,12 +72,16 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	auto* szrMainInner = new wxBoxSizer(wxVERTICAL);
 	szrMainInner->AddSpacer(5);
 	auto* szrTop = new wxBoxSizer(wxHORIZONTAL);
+	m_ssdUnflaggedMineCount = new SevenSegmentDisplay(this);
+	szrTop->Add(m_ssdUnflaggedMineCount, wxSizerFlags(0).CenterVertical());
 	szrTop->AddStretchSpacer(1);
 	szrTop->AddSpacer(5);
 	m_btnNewGame = new wxBitmapButton(this, wxID_ANY, wxBitmap(smile_1_xpm));
 	szrTop->Add(m_btnNewGame, wxSizerFlags(0).CenterVertical());
 	szrTop->AddSpacer(5);
 	szrTop->AddStretchSpacer(1);
+	m_ssdElapsedSeconds = new SevenSegmentDisplay(this);
+	szrTop->Add(m_ssdElapsedSeconds, wxSizerFlags(0).CenterVertical());
 	szrMainInner->Add(szrTop, wxSizerFlags(0).Expand());
 	szrMainInner->AddSpacer(10);
 	szrMainOuter->Add(szrMainInner, wxSizerFlags(1).Expand());
