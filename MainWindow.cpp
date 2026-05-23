@@ -94,6 +94,8 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	{
 		CenterOnScreen();
 	}
+
+	Bind(wxEVT_CLOSE_WINDOW, &MainWindow::MainWindow_OnClose, this);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
