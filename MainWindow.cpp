@@ -18,7 +18,7 @@
 #include "bitmaps/smile-3.xpm"
 #include "bitmaps/smile-4.xpm"
 
-enum
+enum : uint16_t
 {
 	ID_GAME_NEW = wxID_HIGHEST + 1,
 	ID_GAME_BEGINNER,
