@@ -21,7 +21,7 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 {
 	const wxAutoBufferedPaintDC dc(this);
 
-	auto* graphicsContext = wxGraphicsContext::Create(dc);
+	const auto graphicsContext = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(dc));
 
 	graphicsContext->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 	graphicsContext->SetPen(wxPen(GetBackgroundColour()));
@@ -143,8 +143,6 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 			graphicsContext->DrawPath(segmentPath);
 		}
 	}
-
-	delete graphicsContext;
 }
 
 wxSize SevenSegmentDisplay::DoGetBestClientSize() const
