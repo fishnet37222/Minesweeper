@@ -27,11 +27,18 @@ AboutDialog::AboutDialog(wxWindow* parent)
 	m_wvLicense->SetPage(license_html, wxEmptyString);
 	szrMainInner->Add(m_wvLicense, wxSizerFlags(1).Expand());
 	szrMainInner->AddSpacer(5);
-	szrMainInner->Add(CreateStdDialogButtonSizer(wxCLOSE), wxSizerFlags(0).Expand());
+	auto* szrBottom = new wxBoxSizer(wxHORIZONTAL);
+	szrBottom->AddStretchSpacer(1);
+	m_btnClose = new wxButton(this, wxID_OK, "Close");
+	szrBottom->Add(m_btnClose, wxSizerFlags(0).CenterVertical());
+	szrMainInner->Add(szrBottom, wxSizerFlags(0).Expand());
 	szrMainInner->AddSpacer(10);
 	szrMainOuter->Add(szrMainInner, wxSizerFlags(1).Expand());
 	szrMainOuter->AddSpacer(10);
 	SetSizerAndFit(szrMainOuter);
+	SetAffirmativeId(wxID_OK);
+	AddMainButtonId(wxID_OK);
+	SetEscapeId(wxID_OK);
 
 	CenterOnParent();
 }

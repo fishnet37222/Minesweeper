@@ -15,6 +15,7 @@ public:
 private:
 	wxWebView* m_wvLicense{};
 	wxHyperlinkCtrl* m_lnkSourceCode{};
+	wxButton* m_btnClose{};
 
 	void WvLicense_OnNavigating(wxWebViewEvent& event);
 };
