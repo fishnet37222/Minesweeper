@@ -84,6 +84,14 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	m_ssdElapsedSeconds = new SevenSegmentDisplay(this);
 	szrTop->Add(m_ssdElapsedSeconds, wxSizerFlags(0).CenterVertical());
 	szrMainInner->Add(szrTop, wxSizerFlags(0).Expand());
+	szrMainInner->AddSpacer(5);
+	m_mineField = new MineField(this);
+	m_mineField->Bind(wxEVT_LEFT_DOWN, &MainWindow::MineField_OnLeftDown, this);
+	m_mineField->Bind(wxEVT_LEFT_UP, &MainWindow::MineField_OnLeftUp, this);
+	m_mineField->Bind(MINEFIELD_CELL_FLAG_TOGGLED, &MainWindow::MineField_OnCellFlagToggled, this);
+	m_mineField->Bind(MINEFIELD_FIRST_CELL_CLICKED, &MainWindow::MineField_OnFirstCellClicked, this);
+	m_mineField->Bind(MINEFIELD_GAME_OVER, &MainWindow::MineField_OnGameOver, this);
+	szrMainInner->Add(m_mineField, wxSizerFlags(1).CenterHorizontal());
 	szrMainInner->AddSpacer(10);
 	szrMainOuter->Add(szrMainInner, wxSizerFlags(1).Expand());
 	szrMainOuter->AddSpacer(10);
@@ -138,4 +146,32 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 			break;
 	}
 
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::MineField_OnLeftDown(wxMouseEvent& event)
+{
+	if (m_mineField->IsGameInProgress())
+	{
+		m_btnNewGame->SetBitmap(wxBitmap(smile_4_xpm));
+	}
+
+	event.Skip();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::MineField_OnLeftUp(wxMouseEvent& event)
+{
+	if (m_mineField->IsGameInProgress())
+	{
+		m_btnNewGame->SetBitmap(wxBitmap(smile_1_xpm));
+	}
+
+	event.Skip();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::MineField_OnCellFlagToggled([[maybe_unused]] wxCommandEvent& event)
+{
+	m_ssdUnflaggedMineCount->SetValue(m_mineField->GetMineCount() - m_mineField->GetFlagCount());
 }

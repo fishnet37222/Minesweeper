@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
+#include "MineField.h"
 #include "SevenSegmentDisplay.h"
 #include <wx/wx.h>
 
@@ -16,7 +17,13 @@ private:
 	wxBitmapButton* m_btnNewGame{};
 	SevenSegmentDisplay* m_ssdUnflaggedMineCount{};
 	SevenSegmentDisplay* m_ssdElapsedSeconds{};
+	MineField* m_mineField{};
 
 	void MainWindow_OnClose(wxCloseEvent& evt);
 	void MenuBar_OnItemSelect(wxCommandEvent& event);
+	void MineField_OnLeftDown(wxMouseEvent& event);
+	void MineField_OnLeftUp(wxMouseEvent& event);
+	void MineField_OnCellFlagToggled(wxCommandEvent& event);
+	void MineField_OnFirstCellClicked(wxCommandEvent& event);
+	void MineField_OnGameOver(wxCommandEvent& event);
 };
