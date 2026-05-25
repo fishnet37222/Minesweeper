@@ -19,7 +19,7 @@ find_package(wxWidgets REQUIRED net gl core base webview)
 include(${wxWidgets_USE_FILE})
 
 # Define common sources
-set(MINESWEEPER_SOURCES "App.h" "App.cpp" "MainWindow.h" "MainWindow.cpp" "SevenSegmentDisplay.h" "SevenSegmentDisplay.cpp" "AboutDialog.h" "AboutDialog.cpp" "LICENSE-2.0-html.h")
+set(MINESWEEPER_SOURCES "App.h" "App.cpp" "MainWindow.h" "MainWindow.cpp" "SevenSegmentDisplay.h" "SevenSegmentDisplay.cpp" "AboutDialog.h" "AboutDialog.cpp" "LICENSE-2.0-html.h" "MineField.h" "MineField.cpp")
 
 # Conditional add_executable for Windows
 if(WIN32)
