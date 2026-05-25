@@ -128,7 +128,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 			auto* item = m_menuBar->FindItem(ID_GAME_BEGINNER);
 			item->Check();
 			break;
-}
+		}
 
 		case INTERMEDIATE:
 		{
@@ -366,4 +366,22 @@ void MainWindow::Timer_OnTick(wxTimerEvent& event)
 void MainWindow::MineField_OnFirstCellClicked(wxCommandEvent& event)
 {
 	m_timer.Start(1000);
+}
+
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
+void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
+{
+	switch (event.GetInt())
+	{
+		case MineField::LOSS:
+			m_btnNewGame->SetBitmap(wxBitmap(smile_3_xpm));
+			break;
+		case MineField::WIN:
+			m_btnNewGame->SetBitmap(wxBitmap(smile_2_xpm));
+			break;
+		default:
+			break;
+	}
+
+	m_timer.Stop();
 }
