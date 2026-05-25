@@ -31,7 +31,7 @@ private:
 	wxSize m_customFieldSize{ 16, 16 };
 	int m_customMineCount = 40;
 
-	void MainWindow_OnClose(wxCloseEvent& evt);
+	void MainWindow_OnClose(wxCloseEvent& event);
 	void MenuBar_OnItemSelect(wxCommandEvent& event);
 	void MineField_OnLeftDown(wxMouseEvent& event);
 	void MineField_OnLeftUp(wxMouseEvent& event);

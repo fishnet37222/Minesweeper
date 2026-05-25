@@ -155,7 +155,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-void MainWindow::MainWindow_OnClose(wxCloseEvent& evt)
+void MainWindow::MainWindow_OnClose(wxCloseEvent& event)
 {
 	const auto position = GetPosition();
 	wxConfig::Get()->Write("MainWindowPositionX", position.x);
@@ -165,7 +165,7 @@ void MainWindow::MainWindow_OnClose(wxCloseEvent& evt)
 	wxConfig::Get()->Write("CustomFieldHeight", m_customFieldSize.y);
 	wxConfig::Get()->Write("CustomMineCount", m_customMineCount);
 	wxConfig::Get()->Flush();
-	evt.Skip();
+	event.Skip();
 }
 
 // ReSharper disable once CppParameterMayBeConstPtrOrRef
