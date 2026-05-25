@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
+#include <array>
 #include <random>
 #include <vector>
 #include <wx/wx.h>
@@ -11,15 +12,15 @@ wxDECLARE_EVENT(MINEFIELD_GAME_OVER, wxCommandEvent);
 wxDECLARE_EVENT(MINEFIELD_CELL_FLAG_TOGGLED, wxCommandEvent);
 wxDECLARE_EVENT(MINEFIELD_FIRST_CELL_CLICKED, wxCommandEvent);
 
-enum GameOverReason : uint8_t
-{
-	WIN,
-	LOSS
-};
-
 class MineField final : public wxControl
 {
 public:
+	enum GameOverReason : uint8_t
+	{
+		WIN,
+		LOSS
+	};
+
 	explicit MineField(wxWindow* parent);
 	[[nodiscard]] wxSize GetCellSize() const { return m_cellSize; }
 	void SetCellSize(wxSize cellSize);
@@ -56,6 +57,28 @@ private:
 	bool m_gameInProgress{ true };
 	bool m_firstCellClicked{ false };
 
+	wxBitmap m_bmpUnrevealedCell{};
+	wxBitmap m_bmpFlaggedCell{};
+	wxBitmap m_bmpRevealedEmptyCell{};
+	std::array<wxBitmap, 8> m_bmpRevealedNumberCells{};
+	wxBitmap m_bmpRevealedUnClickedMineCell{};
+	wxBitmap m_bmpRevealedClickedMineCell{};
+	wxBitmap m_bmpIncorrectlyFlaggedCell{};
+	wxBitmap m_bmpFlag{};
+	wxBitmap m_bmpExplosion{};
+
+	wxPen m_highlightPen{};
+	wxPen m_shadowPen{};
+	wxPen m_bgPen{};
+	wxPen m_fgPen{};
+	const wxPen m_redPen{ wxTheColourDatabase->Find("RED") };
+
+	wxBrush m_bgBrush{};
+	wxBrush m_fgBrush{};
+	const wxBrush m_redBrush{ wxTheColourDatabase->Find("RED") };
+
+	const wxFont m_numberFont{ GetFont().Bold().Larger() };
+
 	void MineField_OnPaint(wxPaintEvent& event);
 	void MineField_OnRightUp(wxMouseEvent& event);
 	void MineField_OnLeftDown(wxMouseEvent& event);
@@ -63,6 +86,7 @@ private:
 	void MineField_OnMouseMove(wxMouseEvent& event);
 	void MineField_OnLeftDoubleClick(wxMouseEvent& event);
 	[[nodiscard]] wxSize DoGetBestClientSize() const override;
+	void InitBitmaps();
 	[[nodiscard]] wxPoint ClientCoordsToFieldCoords(wxPoint clientCoords) const;
 	void InitializeField();
 	void RevealCells(wxPoint cellCoords);

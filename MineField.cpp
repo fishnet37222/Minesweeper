@@ -27,21 +27,35 @@ MineField::MineField(wxWindow* parent)
 	Bind(wxEVT_LEFT_DCLICK, &MineField::MineField_OnLeftDoubleClick, this);
 	wxControl::SetBackgroundColour(wxTheColourDatabase->Find("LIGHT GREY"));
 	wxControl::SetForegroundColour(wxTheColourDatabase->Find("BLACK"));
+	m_bmpFlag = wxBitmap(flag_small);
+	m_bmpExplosion = wxBitmap(explosion_small);
+	m_bgBrush = wxBrush(GetBackgroundColour());
+	m_fgBrush = wxBrush(GetForegroundColour());
+	m_bgPen = wxPen(GetBackgroundColour());
+	m_fgPen = wxPen(GetForegroundColour());
+	m_highlightPen = wxPen(GetBackgroundColour().ChangeLightness(150));
+	m_shadowPen = wxPen(GetBackgroundColour().ChangeLightness(50));
+	InitBitmaps();
 	InitializeField();
 }
 
 void MineField::MineField_OnPaint([[maybe_unused]] wxPaintEvent& event)
 {
-	const wxAutoBufferedPaintDC dc(this);
+	wxAutoBufferedPaintDC dc(this);
 	const auto gc = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(dc));
 
 	gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
 
-	gc->SetBrush(GetBackgroundColour());
-	gc->SetPen(GetBackgroundColour());
+	const auto redBrush = wxBrush(wxTheColourDatabase->Find("RED"));
+	const auto redPen = wxPen(wxTheColourDatabase->Find("RED"));
 
-	const auto highlightColor = GetBackgroundColour().ChangeLightness(150);
-	const auto shadowColor = GetBackgroundColour().ChangeLightness(50);
+	const auto bgBrush = wxBrush(GetBackgroundColour());
+	const auto bgPen = wxPen(GetBackgroundColour());
+	gc->SetBrush(bgBrush);
+	gc->SetPen(bgPen);
+
+	const auto highlightPen = wxPen(GetBackgroundColour().ChangeLightness(150));
+	const auto shadowPen = wxPen(GetBackgroundColour().ChangeLightness(50));
 
 	const auto bmpFlag = wxBitmap(flag_small);
 	const auto bmpExplosion = wxBitmap(explosion_small);
@@ -58,35 +72,18 @@ void MineField::MineField_OnPaint([[maybe_unused]] wxPaintEvent& event)
 			const auto cellOriginX = fieldX * m_cellSize.GetWidth();
 			const auto& cell = m_cells[static_cast<size_t>(fieldY)][static_cast<size_t>(fieldX)];
 
-			gc->SetBrush(GetBackgroundColour());
-
-			if (cell->m_wasClicked && cell->m_isMine)
-			{
-				gc->SetBrush(wxTheColourDatabase->Find("RED"));
-			}
-
 			if (cell->m_isFlagged || (!cell->m_isRevealed && !(m_mouseLeftDown && m_hoveredCellLocation.x == fieldX && m_hoveredCellLocation.y == fieldY)))
 			{
-				for (auto i = 0; i < 3; i++)
-				{
-					gc->SetPen(wxPen(highlightColor));
-					gc->StrokeLine(cellOriginX + i, cellOriginY + i, cellOriginX + m_cellSize.GetWidth() - i, cellOriginY + i);
-					gc->StrokeLine(cellOriginX + i, cellOriginY + i, cellOriginX + i, cellOriginY + m_cellSize.GetHeight() - i);
+				dc.DrawBitmap(m_bmpUnrevealedCell, cellOriginX, cellOriginY);
 
-					gc->SetPen(wxPen(shadowColor));
-					gc->StrokeLine(cellOriginX + i, cellOriginY + m_cellSize.GetHeight() - i, cellOriginX + m_cellSize.GetWidth() - i, cellOriginY + m_cellSize.GetHeight() - i);
-					gc->StrokeLine(cellOriginX + m_cellSize.GetWidth() - i, cellOriginY + i, cellOriginX + m_cellSize.GetWidth() - i, cellOriginY + m_cellSize.GetHeight() - i);
-				}
-
-				if (cell->m_isFlagged && !cell->m_isRevealed)
+				if (cell->m_isFlagged)
 				{
-					gc->DrawBitmap(bmpFlag, cellOriginX + 3, cellOriginY + 3, m_cellSize.GetWidth() - 6, m_cellSize.GetHeight() - 6);
+					dc.DrawBitmap(m_bmpFlaggedCell, cellOriginX, cellOriginY);
 				}
 			}
 			else
 			{
-				gc->SetPen(wxPen(GetForegroundColour()));
-				gc->DrawRectangle(cellOriginX, cellOriginY, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+				dc.DrawBitmap(m_bmpRevealedEmptyCell, cellOriginX, cellOriginY);
 
 				if (!cell->m_isRevealed)
 				{
@@ -95,42 +92,26 @@ void MineField::MineField_OnPaint([[maybe_unused]] wxPaintEvent& event)
 
 				if (cell->m_isMine)
 				{
+					if (!cell->m_wasClicked)
+					{
+						dc.DrawBitmap(m_bmpRevealedUnClickedMineCell, cellOriginX, cellOriginY);
+					}
+					else
+					{
+						dc.DrawBitmap(m_bmpRevealedClickedMineCell, cellOriginX, cellOriginY);
+					}
 					gc->DrawBitmap(bmpExplosion, cellOriginX + 1, cellOriginY + 1, m_cellSize.GetWidth() - 2, m_cellSize.GetHeight() - 2);
 				}
 				else if (cell->m_adjacentMineCount > 0)
 				{
-					// Set the text color based on the number of adjacent mines
-					wxColour textColor;
-					switch (cell->m_adjacentMineCount)
-					{
-						case 1: textColor = wxTheColourDatabase->Find("BLUE"); break;
-						case 2: textColor = wxTheColourDatabase->Find("GREEN"); break;
-						case 3: textColor = wxTheColourDatabase->Find("RED"); break;
-						case 4: textColor = wxTheColourDatabase->Find("DARK BLUE"); break;
-						case 5: textColor = wxTheColourDatabase->Find("DARK RED"); break;
-						case 6: textColor = wxTheColourDatabase->Find("CYAN"); break;
-						case 7: textColor = wxTheColourDatabase->Find("BLACK"); break;
-						case 8: textColor = wxTheColourDatabase->Find("GREY"); break;
-						default: textColor = GetForegroundColour(); break;
-					}
-
-					const auto text = std::to_wstring(cell->m_adjacentMineCount);
-					double textWidth, textHeight;
-					gc->SetFont(font, textColor);
-					gc->GetTextExtent(text, &textWidth, &textHeight);
-					gc->DrawText(text, cellOriginX + (m_cellSize.GetWidth() - textWidth) / 2, cellOriginY + (m_cellSize.GetHeight() - textHeight) / 2);
+					const auto drawBitmap = m_bmpRevealedNumberCells[cell->m_adjacentMineCount - 1];
+					dc.DrawBitmap(drawBitmap, cellOriginX, cellOriginY);
 				}
 			}
 
-			if (cell->m_isFlagged && cell->m_isRevealed)
+			if (cell->m_isFlagged && cell->m_isRevealed && !cell->m_isMine)
 			{
-				gc->SetBrush(GetBackgroundColour());
-				gc->SetPen(wxPen(GetForegroundColour()));
-				gc->DrawRectangle(cellOriginX, cellOriginY, m_cellSize.GetWidth(), m_cellSize.GetHeight());
-				gc->DrawBitmap(explosion_small, cellOriginX + 1, cellOriginY + 1, m_cellSize.GetWidth() - 2, m_cellSize.GetHeight() - 2);
-				gc->SetPen(wxPen(wxTheColourDatabase->Find("RED"), 2));
-				gc->StrokeLine(cellOriginX, cellOriginY, cellOriginX + m_cellSize.GetWidth(), cellOriginY + m_cellSize.GetHeight());
-				gc->StrokeLine(cellOriginX + m_cellSize.GetWidth(), cellOriginY, cellOriginX, cellOriginY + m_cellSize.GetHeight());
+				dc.DrawBitmap(m_bmpIncorrectlyFlaggedCell, cellOriginX, cellOriginY);
 			}
 		}
 	}
@@ -143,9 +124,148 @@ wxSize MineField::DoGetBestClientSize() const
 	return { width, height };
 }
 
+void MineField::InitBitmaps()
+{
+	m_bmpUnrevealedCell = wxBitmap(m_cellSize);
+	{
+		const auto memDC = wxMemoryDC(m_bmpUnrevealedCell);
+		const auto memGC = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(memDC));
+		memGC->SetBrush(m_bgBrush);
+		memGC->SetPen(m_bgPen);
+		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+		auto highlightPath = memGC->CreatePath();
+		auto shadowPath = memGC->CreatePath();
+		for (auto i = 0; i < 3; i++)
+		{
+			highlightPath.MoveToPoint(i, i);
+			highlightPath.AddLineToPoint(m_cellSize.GetWidth() - i, i);
+			highlightPath.MoveToPoint(i, i);
+			highlightPath.AddLineToPoint(i, m_cellSize.GetHeight() - i);
+
+			shadowPath.MoveToPoint(m_cellSize.GetWidth() - i, m_cellSize.GetHeight() - i);
+			shadowPath.AddLineToPoint(i, m_cellSize.GetHeight() - i);
+			shadowPath.MoveToPoint(m_cellSize.GetWidth() - i, m_cellSize.GetHeight() - i);
+			shadowPath.AddLineToPoint(m_cellSize.GetWidth() - i, i);
+		}
+		memGC->SetPen(m_highlightPen);
+		memGC->StrokePath(highlightPath);
+		memGC->SetPen(m_shadowPen);
+		memGC->StrokePath(shadowPath);
+	}
+
+	m_bmpFlaggedCell = wxBitmap(m_cellSize);
+	{
+		const auto memDC = wxMemoryDC(m_bmpFlaggedCell);
+		const auto memGC = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(memDC));
+		memGC->SetBrush(m_bgBrush);
+		memGC->SetPen(m_bgPen);
+		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+		auto highlightPath = memGC->CreatePath();
+		auto shadowPath = memGC->CreatePath();
+		for (auto i = 0; i < 3; i++)
+		{
+			highlightPath.MoveToPoint(i, i);
+			highlightPath.AddLineToPoint(m_cellSize.GetWidth() - i, i);
+			highlightPath.MoveToPoint(i, i);
+			highlightPath.AddLineToPoint(i, m_cellSize.GetHeight() - i);
+
+			shadowPath.MoveToPoint(m_cellSize.GetWidth() - i, m_cellSize.GetHeight() - i);
+			shadowPath.AddLineToPoint(i, m_cellSize.GetHeight() - i);
+			shadowPath.MoveToPoint(m_cellSize.GetWidth() - i, m_cellSize.GetHeight() - i);
+			shadowPath.AddLineToPoint(m_cellSize.GetWidth() - i, i);
+		}
+		memGC->SetPen(m_highlightPen);
+		memGC->StrokePath(highlightPath);
+		memGC->SetPen(m_shadowPen);
+		memGC->StrokePath(shadowPath);
+
+		memGC->DrawBitmap(m_bmpFlag, 3, 3, m_cellSize.GetWidth() - 6, m_cellSize.GetHeight() - 6);
+	}
+
+	m_bmpRevealedEmptyCell = wxBitmap(m_cellSize);
+	{
+		const auto memDC = wxMemoryDC(m_bmpRevealedEmptyCell);
+		const auto memGC = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(memDC));
+		memGC->SetBrush(m_bgBrush);
+		memGC->SetPen(m_fgPen);
+		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+	}
+
+	m_bmpRevealedUnClickedMineCell = wxBitmap(m_cellSize);
+	{
+		const auto memDC = wxMemoryDC(m_bmpRevealedUnClickedMineCell);
+		const auto memGC = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(memDC));
+		memGC->SetBrush(m_bgBrush);
+		memGC->SetPen(m_fgPen);
+		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+	}
+
+	m_bmpRevealedClickedMineCell = wxBitmap(m_cellSize);
+	{
+		const auto memDC = wxMemoryDC(m_bmpRevealedClickedMineCell);
+		const auto memGC = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(memDC));
+		memGC->SetBrush(m_redBrush);
+		memGC->SetPen(m_fgPen);
+		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+	}
+
+	for (auto i = 1; i < 8; i++)
+	{
+		wxBitmap bmpRevealedNumberCell(m_cellSize);
+		{
+			const auto memDC = wxMemoryDC(bmpRevealedNumberCell);
+			const auto memGC = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(memDC));
+			memGC->SetBrush(m_bgBrush);
+			memGC->SetPen(m_fgPen);
+			memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+
+			wxColour textColor;
+			switch (i)
+			{
+				case 1: textColor = wxTheColourDatabase->Find("BLUE"); break;
+				case 2: textColor = wxTheColourDatabase->Find("GREEN"); break;
+				case 3: textColor = wxTheColourDatabase->Find("RED"); break;
+				case 4: textColor = wxTheColourDatabase->Find("DARK BLUE"); break;
+				case 5: textColor = wxTheColourDatabase->Find("DARK RED"); break;
+				case 6: textColor = wxTheColourDatabase->Find("CYAN"); break;
+				case 7: textColor = wxTheColourDatabase->Find("BLACK"); break;
+				case 8: textColor = wxTheColourDatabase->Find("GREY"); break;
+				default: textColor = GetForegroundColour(); break;
+			}
+
+			const auto text = std::to_wstring(i);
+			double textWidth, textHeight;
+			memGC->SetFont(m_numberFont, textColor);
+			memGC->GetTextExtent(text, &textWidth, &textHeight);
+			memGC->DrawText(text, (m_cellSize.GetWidth() - textWidth) / 2, (m_cellSize.GetHeight() - textHeight) / 2);
+		}
+		m_bmpRevealedNumberCells[i - 1] = bmpRevealedNumberCell;
+	}
+
+	m_bmpIncorrectlyFlaggedCell = wxBitmap(m_cellSize);
+	{
+		const auto memDC = wxMemoryDC(m_bmpIncorrectlyFlaggedCell);
+		const auto memGC = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(memDC));
+		memGC->SetBrush(m_bgBrush);
+		memGC->SetPen(m_fgPen);
+		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+		memGC->DrawBitmap(m_bmpExplosion, 3, 3, m_cellSize.GetWidth() - 6, m_cellSize.GetHeight() - 6);
+		memGC->SetPen(m_redPen);
+		auto path = memGC->CreatePath();
+		path.MoveToPoint(0, 0);
+		path.AddLineToPoint(m_cellSize.GetWidth(), m_cellSize.GetHeight());
+		path.MoveToPoint(m_cellSize.GetWidth(), 0);
+		path.AddLineToPoint(0, m_cellSize.GetHeight());
+		memGC->StrokePath(path);
+	}
+}
+
 void MineField::SetCellSize(const wxSize cellSize)
 {
 	m_cellSize = cellSize;
+
+	InitBitmaps();
+
 	InvalidateBestSize();
 	Refresh();
 }
@@ -259,7 +379,7 @@ void MineField::MineField_OnLeftUp(wxMouseEvent& event)
 		);
 
 		// Check if all unrevealed cells are mines, which means the player has won.
-		if (std::ranges::equal(unrevealedCellLocations, m_mineLocations))
+		if (unrevealedCellLocations.size() == m_mineLocations.size() && std::ranges::equal(unrevealedCellLocations, m_mineLocations))
 		{
 #ifdef _DEBUG
 			OutputDebugStringW(L"Game won.\n");
@@ -478,7 +598,10 @@ void MineField::RevealMines()
 	// Mark all mines as revealed so they will be shown in the next paint event.
 	for (const auto& mineLocation : m_mineLocations)
 	{
-		m_cells[static_cast<size_t>(mineLocation.y)][static_cast<size_t>(mineLocation.x)]->m_isRevealed = true;
+		if (const auto& cell = m_cells[static_cast<size_t>(mineLocation.y)][static_cast<size_t>(mineLocation.x)]; !cell->m_isFlagged)
+		{
+			cell->m_isRevealed = true;
+		}
 	}
 
 	for (const auto& flagLocation : m_flagLocations)
