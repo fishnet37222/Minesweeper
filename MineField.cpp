@@ -42,27 +42,8 @@ MineField::MineField(wxWindow* parent)
 void MineField::MineField_OnPaint([[maybe_unused]] wxPaintEvent& event)
 {
 	wxAutoBufferedPaintDC dc(this);
-	const auto gc = std::unique_ptr<wxGraphicsContext>(wxGraphicsContext::Create(dc));
 
-	gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-
-	const auto redBrush = wxBrush(wxTheColourDatabase->Find("RED"));
-	const auto redPen = wxPen(wxTheColourDatabase->Find("RED"));
-
-	const auto bgBrush = wxBrush(GetBackgroundColour());
-	const auto bgPen = wxPen(GetBackgroundColour());
-	gc->SetBrush(bgBrush);
-	gc->SetPen(bgPen);
-
-	const auto highlightPen = wxPen(GetBackgroundColour().ChangeLightness(150));
-	const auto shadowPen = wxPen(GetBackgroundColour().ChangeLightness(50));
-
-	const auto bmpFlag = wxBitmap(flag_small);
-	const auto bmpExplosion = wxBitmap(explosion_small);
-
-	const auto font = GetFont().Bold().Larger();
-
-	gc->DrawRectangle(0, 0, GetSize().GetWidth(), GetSize().GetHeight());
+	dc.DrawRectangle(0, 0, GetSize().GetWidth(), GetSize().GetHeight());
 
 	for (auto fieldY = 0; fieldY < m_fieldSize.GetHeight(); fieldY++)
 	{
@@ -100,7 +81,6 @@ void MineField::MineField_OnPaint([[maybe_unused]] wxPaintEvent& event)
 					{
 						dc.DrawBitmap(m_bmpRevealedClickedMineCell, cellOriginX, cellOriginY);
 					}
-					gc->DrawBitmap(bmpExplosion, cellOriginX + 1, cellOriginY + 1, m_cellSize.GetWidth() - 2, m_cellSize.GetHeight() - 2);
 				}
 				else if (cell->m_adjacentMineCount > 0)
 				{
@@ -198,6 +178,7 @@ void MineField::InitBitmaps()
 		memGC->SetBrush(m_bgBrush);
 		memGC->SetPen(m_fgPen);
 		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+		memGC->DrawBitmap(m_bmpExplosion, 1, 1, m_cellSize.GetWidth() - 2, m_cellSize.GetHeight() - 2);
 	}
 
 	m_bmpRevealedClickedMineCell = wxBitmap(m_cellSize);
@@ -207,6 +188,7 @@ void MineField::InitBitmaps()
 		memGC->SetBrush(m_redBrush);
 		memGC->SetPen(m_fgPen);
 		memGC->DrawRectangle(0, 0, m_cellSize.GetWidth(), m_cellSize.GetHeight());
+		memGC->DrawBitmap(m_bmpExplosion, 1, 1, m_cellSize.GetWidth() - 2, m_cellSize.GetHeight() - 2);
 	}
 
 	for (auto i = 1; i < 8; i++)
