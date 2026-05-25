@@ -111,6 +111,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	}
 
 	Bind(wxEVT_CLOSE_WINDOW, &MainWindow::MainWindow_OnClose, this);
+	m_timer.Bind(wxEVT_TIMER, &MainWindow::Timer_OnTick, this);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -174,4 +175,16 @@ void MainWindow::MineField_OnLeftUp(wxMouseEvent& event)
 void MainWindow::MineField_OnCellFlagToggled([[maybe_unused]] wxCommandEvent& event)
 {
 	m_ssdUnflaggedMineCount->SetValue(m_mineField->GetMineCount() - m_mineField->GetFlagCount());
+}
+
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::Timer_OnTick(wxTimerEvent& event)
+{
+	m_ssdElapsedSeconds->SetValue(m_ssdElapsedSeconds->GetValue() + 1);
+}
+
+void MainWindow::MineField_OnFirstCellClicked(wxCommandEvent& event)
+{
+	m_timer.Start(1000);
 }

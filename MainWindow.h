@@ -18,6 +18,7 @@ private:
 	SevenSegmentDisplay* m_ssdUnflaggedMineCount{};
 	SevenSegmentDisplay* m_ssdElapsedSeconds{};
 	MineField* m_mineField{};
+	wxTimer m_timer{};
 
 	void MainWindow_OnClose(wxCloseEvent& evt);
 	void MenuBar_OnItemSelect(wxCommandEvent& event);
@@ -26,4 +27,5 @@ private:
 	void MineField_OnCellFlagToggled(wxCommandEvent& event);
 	void MineField_OnFirstCellClicked(wxCommandEvent& event);
 	void MineField_OnGameOver(wxCommandEvent& event);
+	void Timer_OnTick(wxTimerEvent& event);
 };
