@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+#include "pch.h"
 #include "SevenSegmentDisplay.h"
 #include <wx/dcbuffer.h>
 #include <wx/graphics.h>

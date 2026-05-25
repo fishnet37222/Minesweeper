@@ -2,18 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+#include "pch.h"
 #include "AboutDialog.h"
 #include "CustomFieldDialog.h"
 #include "MainWindow.h"
 #include <wx/config.h>
-
-#ifdef __linux__
-#include "bitmaps/bomb-128.xpm"
-#include "bitmaps/bomb-16.xpm"
-#include "bitmaps/bomb-256.xpm"
-#include "bitmaps/bomb-32.xpm"
-#include "bitmaps/bomb-64.xpm"
-#endif
 
 #include "bitmaps/smile-1.xpm"
 #include "bitmaps/smile-2.xpm"
@@ -38,15 +31,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 
 	wxIconBundle icons;
 
-#ifdef _WINDOWS
 	icons = wxIconBundle("APP_ICON", nullptr);
-#elif defined(__linux__)
-	icons.AddIcon(wxIcon(bomb_16_xpm));
-	icons.AddIcon(wxIcon(bomb_32_xpm));
-	icons.AddIcon(wxIcon(bomb_64_xpm));
-	icons.AddIcon(wxIcon(bomb_128_xpm));
-	icons.AddIcon(wxIcon(bomb_256_xpm));
-#endif
 
 	wxFrame::SetIcons(icons);
 

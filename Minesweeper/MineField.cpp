@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+#include "pch.h"
 #include "MineField.h"
 #include <sstream>
 #include <stack>

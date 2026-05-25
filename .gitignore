@@ -1,5 +1,5 @@
 .vs/
-out/
-.idea/
+vcpkg_installed/
+x64/
 
 *.user

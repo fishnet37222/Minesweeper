@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+#include "pch.h"
 #include "App.h"
 #include "MainWindow.h"
 #include <wx/stdpaths.h>
