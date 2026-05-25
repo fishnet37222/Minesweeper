@@ -7,6 +7,14 @@
 #include "SevenSegmentDisplay.h"
 #include <wx/wx.h>
 
+enum GameDifficulty : uint8_t
+{
+	BEGINNER,
+	INTERMEDIATE,
+	EXPERT,
+	CUSTOM
+};
+
 class MainWindow final : public wxFrame
 {
 public:
@@ -19,6 +27,9 @@ private:
 	SevenSegmentDisplay* m_ssdElapsedSeconds{};
 	MineField* m_mineField{};
 	wxTimer m_timer{};
+	GameDifficulty m_difficulty{ BEGINNER };
+	wxSize m_customFieldSize{ 16, 16 };
+	int m_customMineCount = 40;
 
 	void MainWindow_OnClose(wxCloseEvent& evt);
 	void MenuBar_OnItemSelect(wxCommandEvent& event);
@@ -27,5 +38,7 @@ private:
 	void MineField_OnCellFlagToggled(wxCommandEvent& event);
 	void MineField_OnFirstCellClicked(wxCommandEvent& event);
 	void MineField_OnGameOver(wxCommandEvent& event);
+	void StartNewGame();
+	void BtnNewGame_OnClick(wxCommandEvent& event);
 	void Timer_OnTick(wxTimerEvent& event);
 };

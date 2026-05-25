@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "AboutDialog.h"
+#include "CustomFieldDialog.h"
 #include "MainWindow.h"
 #include <wx/config.h>
 
@@ -74,10 +75,12 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	szrMainInner->AddSpacer(5);
 	auto* szrTop = new wxBoxSizer(wxHORIZONTAL);
 	m_ssdUnflaggedMineCount = new SevenSegmentDisplay(this);
+	m_ssdUnflaggedMineCount->SetValue(10);
 	szrTop->Add(m_ssdUnflaggedMineCount, wxSizerFlags(0).CenterVertical());
 	szrTop->AddStretchSpacer(1);
 	szrTop->AddSpacer(5);
 	m_btnNewGame = new wxBitmapButton(this, wxID_ANY, wxBitmap(smile_1_xpm));
+	m_btnNewGame->Bind(wxEVT_BUTTON, &MainWindow::BtnNewGame_OnClick, this);
 	szrTop->Add(m_btnNewGame, wxSizerFlags(0).CenterVertical());
 	szrTop->AddSpacer(5);
 	szrTop->AddStretchSpacer(1);
@@ -112,6 +115,43 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 
 	Bind(wxEVT_CLOSE_WINDOW, &MainWindow::MainWindow_OnClose, this);
 	m_timer.Bind(wxEVT_TIMER, &MainWindow::Timer_OnTick, this);
+
+	m_customMineCount = static_cast<int>(wxConfig::Get()->ReadLong("CustomMineCount", 40));
+	m_customFieldSize.x = static_cast<int>(wxConfig::Get()->ReadLong("CustomFieldWidth", 16));
+	m_customFieldSize.y = static_cast<int>(wxConfig::Get()->ReadLong("CustomFieldHeight", 16));
+
+	m_difficulty = static_cast<GameDifficulty>(wxConfig::Get()->ReadLong("GameDifficulty", BEGINNER));
+	switch (m_difficulty)
+	{
+		case BEGINNER:
+		{
+			auto* item = m_menuBar->FindItem(ID_GAME_BEGINNER);
+			item->Check();
+			break;
+}
+
+		case INTERMEDIATE:
+		{
+			auto* item = m_menuBar->FindItem(ID_GAME_INTERMEDIATE);
+			item->Check();
+			break;
+		}
+
+		case EXPERT:
+		{
+			auto* item = m_menuBar->FindItem(ID_GAME_EXPERT);
+			item->Check();
+			break;
+		}
+
+		case CUSTOM:
+		{
+			auto* item = m_menuBar->FindItem(ID_GAME_CUSTOM);
+			item->Check();
+			break;
+		}
+	}
+	StartNewGame();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -120,6 +160,10 @@ void MainWindow::MainWindow_OnClose(wxCloseEvent& evt)
 	const auto position = GetPosition();
 	wxConfig::Get()->Write("MainWindowPositionX", position.x);
 	wxConfig::Get()->Write("MainWindowPositionY", position.y);
+	wxConfig::Get()->Write("GameDifficulty", static_cast<int>(m_difficulty));
+	wxConfig::Get()->Write("CustomFieldWidth", m_customFieldSize.x);
+	wxConfig::Get()->Write("CustomFieldHeight", m_customFieldSize.y);
+	wxConfig::Get()->Write("CustomMineCount", m_customMineCount);
 	wxConfig::Get()->Flush();
 	evt.Skip();
 }
@@ -129,6 +173,108 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 {
 	switch (event.GetId())
 	{
+		case ID_GAME_NEW:
+		{
+			StartNewGame();
+			break;
+		}
+
+		case ID_GAME_BEGINNER:
+		{
+			if (m_difficulty == BEGINNER)
+			{
+				return;
+			}
+
+			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
+
+			m_difficulty = BEGINNER;
+			StartNewGame();
+			m_menuBar->FindItem(ID_GAME_BEGINNER)->Check(true);
+
+			break;
+		}
+
+		case ID_GAME_INTERMEDIATE:
+		{
+			if (m_difficulty == INTERMEDIATE)
+			{
+				return;
+			}
+
+			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
+
+			m_difficulty = INTERMEDIATE;
+			StartNewGame();
+			m_menuBar->FindItem(ID_GAME_INTERMEDIATE)->Check(true);
+
+			break;
+		}
+
+		case ID_GAME_EXPERT:
+		{
+			if (m_difficulty == EXPERT)
+			{
+				return;
+			}
+
+			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
+
+			m_difficulty = EXPERT;
+			StartNewGame();
+			m_menuBar->FindItem(ID_GAME_EXPERT)->Check(true);
+
+			break;
+		}
+
+		case ID_GAME_CUSTOM:
+		{
+			const auto previousDifficulty = m_difficulty;
+			CustomFieldDialog dlg(this, m_mineField->GetFieldSize(), m_mineField->GetMineCount());
+			if (const auto result = dlg.ShowModal(); result == wxID_OK)
+			{
+				m_customFieldSize = dlg.GetCustomFieldSize();
+				m_customMineCount = dlg.GetCustomMineCount();
+				m_difficulty = CUSTOM;
+				switch (previousDifficulty)
+				{
+					case BEGINNER:
+						m_menuBar->FindItem(ID_GAME_BEGINNER)->Check(false);
+						break;
+					case INTERMEDIATE:
+						m_menuBar->FindItem(ID_GAME_INTERMEDIATE)->Check(false);
+						break;
+					case EXPERT:
+						m_menuBar->FindItem(ID_GAME_EXPERT)->Check(false);
+						break;
+					case CUSTOM:
+						m_menuBar->FindItem(ID_GAME_CUSTOM)->Check(false);
+						break;
+				}
+				StartNewGame();
+			}
+			else
+			{
+				m_menuBar->FindItem(ID_GAME_CUSTOM)->Check(previousDifficulty == CUSTOM);
+				switch (previousDifficulty)
+				{
+					case BEGINNER:
+						m_menuBar->FindItem(ID_GAME_BEGINNER)->Check(true);
+						break;
+					case INTERMEDIATE:
+						m_menuBar->FindItem(ID_GAME_INTERMEDIATE)->Check(true);
+						break;
+					case EXPERT:
+						m_menuBar->FindItem(ID_GAME_EXPERT)->Check(true);
+						break;
+					case CUSTOM:
+						m_menuBar->FindItem(ID_GAME_CUSTOM)->Check(true);
+						break;
+				}
+			}
+			break;
+		}
+
 		case ID_GAME_EXIT:
 		{
 			Close();
@@ -177,6 +323,39 @@ void MainWindow::MineField_OnCellFlagToggled([[maybe_unused]] wxCommandEvent& ev
 	m_ssdUnflaggedMineCount->SetValue(m_mineField->GetMineCount() - m_mineField->GetFlagCount());
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::StartNewGame()
+{
+	switch (m_difficulty)
+	{
+		case BEGINNER:
+			m_mineField->Reset({ 9, 9 }, 10);
+			break;
+		case INTERMEDIATE:
+			m_mineField->Reset({ 16, 16 }, 40);
+			break;
+		case EXPERT:
+			m_mineField->Reset({ 30, 16 }, 99);
+			break;
+		case CUSTOM:
+			m_mineField->Reset(m_customFieldSize, m_customMineCount);
+			break;
+	}
+
+	m_ssdUnflaggedMineCount->SetValue(m_mineField->GetMineCount());
+	if (m_timer.IsRunning())
+	{
+		m_timer.Stop();
+	}
+	m_ssdElapsedSeconds->SetValue(0);
+	m_btnNewGame->SetBitmap(wxBitmap(smile_1_xpm));
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MainWindow::BtnNewGame_OnClick([[maybe_unused]] wxCommandEvent& event)
+{
+	StartNewGame();
+}
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void MainWindow::Timer_OnTick(wxTimerEvent& event)
