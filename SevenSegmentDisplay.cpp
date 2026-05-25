@@ -73,7 +73,7 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 					segmentPath.MoveToPoint(digitOriginX, digitOriginY + 1);
 					segmentPath.AddLineToPoint(digitOriginX, digitOriginY + halfDigitHeight - 1);
 					segmentPath.AddLineToPoint(digitOriginX + m_segmentThickness, digitOriginY + halfDigitHeight - m_segmentThickness - 1);
-					segmentPath.AddLineToPoint(digitOriginX + m_segmentThickness, digitOriginY + 1);
+					segmentPath.AddLineToPoint(digitOriginX + m_segmentThickness, digitOriginY + m_segmentThickness + 1);
 					segmentPath.CloseSubpath();
 
 					break;
@@ -84,7 +84,7 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 					segmentPath.MoveToPoint(digitOriginX + m_digitSize.GetWidth(), digitOriginY + 1);
 					segmentPath.AddLineToPoint(digitOriginX + m_digitSize.GetWidth(), digitOriginY + halfDigitHeight - 1);
 					segmentPath.AddLineToPoint(digitOriginX + m_digitSize.GetWidth() - m_segmentThickness, digitOriginY + halfDigitHeight - m_segmentThickness - 1);
-					segmentPath.AddLineToPoint(digitOriginX + m_digitSize.GetWidth() - m_segmentThickness, digitOriginY + 1);
+					segmentPath.AddLineToPoint(digitOriginX + m_digitSize.GetWidth() - m_segmentThickness, digitOriginY + m_segmentThickness + 1);
 					segmentPath.CloseSubpath();
 
 					break;
