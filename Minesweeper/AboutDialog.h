@@ -4,7 +4,6 @@
 
 #pragma once
 #include <wx/hyperlink.h>
-#include <wx/webview.h>
 #include <wx/wx.h>
 
 class AboutDialog final : public wxDialog
@@ -13,9 +12,7 @@ public:
 	explicit AboutDialog(wxWindow* parent);
 
 private:
-	wxWebView* m_wvLicense{};
+	wxTextCtrl* m_txtLicense{};
 	wxHyperlinkCtrl* m_lnkSourceCode{};
 	wxButton* m_btnClose{};
-
-	void WvLicense_OnNavigating(wxWebViewEvent& event);
 };

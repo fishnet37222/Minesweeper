@@ -108,7 +108,6 @@
     <ClInclude Include="AboutDialog.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="CustomFieldDialog.h" />
-    <ClInclude Include="LICENSE-2.0-html.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MineField.h" />
     <ClInclude Include="pch.h" />

@@ -74,9 +74,6 @@
     <ClInclude Include="CustomFieldDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LICENSE-2.0-html.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
