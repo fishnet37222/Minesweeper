@@ -29,11 +29,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 {
 	wxFrame::SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
 
-	wxIconBundle icons;
-
-	icons = wxIconBundle("APP_ICON", nullptr);
-
-	wxFrame::SetIcons(icons);
+	wxFrame::SetIcons(wxIconBundle("APP_ICON", nullptr));
 
 	m_menuBar = new wxMenuBar();
 	auto* mnuGame = new wxMenu();
