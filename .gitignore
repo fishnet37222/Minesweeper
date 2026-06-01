@@ -1,5 +1,6 @@
 .vs/
 vcpkg_installed/
 x64/
+Output/
 
 *.user
