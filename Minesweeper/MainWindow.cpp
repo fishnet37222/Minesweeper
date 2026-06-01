@@ -28,6 +28,8 @@ enum : uint16_t
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX))
 {
+	m_bestTimesFilePath = wxStandardPaths::Get().GetUserDataDir().ToStdString() + "/best_times.json";
+
 	wxFrame::SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
 
 	wxFrame::SetIcons(wxIconBundle("APP_ICON", nullptr));
@@ -116,6 +118,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_BEGINNER);
 			item->Check();
+			m_difficultyName = "Beginner";
 			break;
 		}
 
@@ -123,6 +126,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_INTERMEDIATE);
 			item->Check();
+			m_difficultyName = "Intermediate";
 			break;
 		}
 
@@ -130,6 +134,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_EXPERT);
 			item->Check();
+			m_difficultyName = "Expert";
 			break;
 		}
 
@@ -137,6 +142,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_CUSTOM);
 			item->Check();
+			m_difficultyName = "Custom";
 			break;
 		}
 	}
@@ -188,6 +194,7 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
 
 			m_difficulty = BEGINNER;
+			m_difficultyName = "Beginner";
 			StartNewGame();
 			m_menuBar->FindItem(ID_GAME_BEGINNER)->Check(true);
 
@@ -204,6 +211,7 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
 
 			m_difficulty = INTERMEDIATE;
+			m_difficultyName = "Intermediate";
 			StartNewGame();
 			m_menuBar->FindItem(ID_GAME_INTERMEDIATE)->Check(true);
 
@@ -220,6 +228,7 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
 
 			m_difficulty = EXPERT;
+			m_difficultyName = "Expert";
 			StartNewGame();
 			m_menuBar->FindItem(ID_GAME_EXPERT)->Check(true);
 
@@ -235,6 +244,7 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 				m_customFieldSize = dlg.GetCustomFieldSize();
 				m_customMineCount = dlg.GetCustomMineCount();
 				m_difficulty = CUSTOM;
+				m_difficultyName = "Custom";
 				switch (previousDifficulty)
 				{
 					case BEGINNER:
@@ -373,11 +383,31 @@ void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
 	switch (event.GetInt())
 	{
 		case MineField::LOSS:
+		{
 			m_btnNewGame->SetBitmap(wxBitmap(smile_3_xpm));
 			break;
+		}
+
 		case MineField::WIN:
+		{
 			m_btnNewGame->SetBitmap(wxBitmap(smile_2_xpm));
+			if (m_bestTimes.isMember(m_difficultyName))
+			{
+				if (m_bestTimes[m_difficultyName]["time"].asInt() > m_ssdElapsedSeconds->GetValue())
+				{
+					break;
+				}
+			}
+			if (wxTextEntryDialog dialog(this, "Congratulations! You won! Enter your name for the best times list:", "You Win!", "", wxTextEntryDialogStyle);
+				dialog.ShowModal() == wxID_OK)
+			{
+				const std::string playerName = dialog.GetValue().ToStdString();
+				m_bestTimes[m_difficultyName]["name"] = playerName;
+				m_bestTimes[m_difficultyName]["time"] = m_ssdElapsedSeconds->GetValue();
+			}
 			break;
+		}
+
 		default:
 			break;
 	}

@@ -8,7 +8,7 @@
 #include <wx/wx.h>
 #include <json/json.h>
 #include <filesystem>
-#include <wx/msw/stdpaths.h>
+#include <wx/stdpaths.h>
 
 enum GameDifficulty : uint8_t
 {
@@ -34,7 +34,8 @@ private:
 	wxSize m_customFieldSize{ 16, 16 };
 	int m_customMineCount = 40;
 	Json::Value m_bestTimes{};
-	std::filesystem::path m_bestTimesFilePath{ wxStandardPaths::Get().GetUserDataDir() / "FishNetSoft" / "Minesweeper" / "best_times.json" };
+	std::string m_difficultyName{};
+	std::filesystem::path m_bestTimesFilePath{};
 
 	void MainWindow_OnClose(wxCloseEvent& event);
 	void MenuBar_OnItemSelect(wxCommandEvent& event);
