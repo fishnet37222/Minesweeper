@@ -394,6 +394,7 @@ void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
 				const std::string playerName = dialog.GetValue().ToStdString();
 				bestTimes[m_difficultyName]["name"] = playerName;
 				bestTimes[m_difficultyName]["time"] = m_ssdElapsedSeconds->GetValue();
+				bestTimes[m_difficultyName]["date"] = wxDateTime::Now().FormatISODate().ToStdString();
 				wxGetApp().SetBestTimes(bestTimes);
 			}
 			break;
