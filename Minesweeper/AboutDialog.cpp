@@ -5,6 +5,7 @@
 #include "pch.h"
 #include "AboutDialog.h"
 #include "LICENSE-2.0-text.h"
+#include <wx/hyperlink.h>
 
 AboutDialog::AboutDialog(wxWindow* parent)
 {
