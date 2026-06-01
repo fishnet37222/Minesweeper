@@ -17,8 +17,7 @@ AboutDialog::AboutDialog(wxWindow* parent)
 	szrMainInner->Add(new wxStaticText(this, wxID_ANY, "Minesweeper Version 1.0.0"), wxSizerFlags(0).CenterHorizontal());
 	szrMainInner->Add(new wxStaticText(this, wxID_ANY, "Copyright \u00a9 2026 David A. Frischknecht"), wxSizerFlags(0).CenterHorizontal());
 	szrMainInner->Add(new wxHyperlinkCtrl(this, wxID_ANY, "Licensed under the Apache License, Version 2.0", "https://www.apache.org/licenses/LICENSE-2.0"), wxSizerFlags(0).CenterHorizontal());
-	m_lnkSourceCode = new wxHyperlinkCtrl(this, wxID_ANY, "Source Code on GitHub", "https://github.com/fishnet37222/Minesweeper");
-	szrMainInner->Add(m_lnkSourceCode, wxSizerFlags(0).CenterHorizontal());
+	szrMainInner->Add(new wxHyperlinkCtrl(this, wxID_ANY, "Source Code on GitHub", "https://github.com/fishnet37222/Minesweeper"), wxSizerFlags(0).CenterHorizontal());
 	szrMainInner->AddSpacer(5);
 	m_txtLicense = new wxTextCtrl(this, wxID_ANY, license_txt, wxDefaultPosition, wxSize(650, 400), wxTE_MULTILINE | wxTE_READONLY);
 	m_txtLicense->SetFont(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));

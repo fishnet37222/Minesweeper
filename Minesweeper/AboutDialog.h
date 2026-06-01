@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #pragma once
-#include <wx/hyperlink.h>
 #include <wx/wx.h>
 
 class AboutDialog final : public wxDialog
@@ -13,6 +12,5 @@ public:
 
 private:
 	wxTextCtrl* m_txtLicense{};
-	wxHyperlinkCtrl* m_lnkSourceCode{};
 	wxButton* m_btnClose{};
 };
