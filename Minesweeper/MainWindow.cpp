@@ -8,7 +8,6 @@
 #include "MainWindow.h"
 #include <wx/config.h>
 #include <fstream>
-#include "App.h"
 
 #include "bitmaps/smile-1.xpm"
 #include "bitmaps/smile-2.xpm"
@@ -103,10 +102,10 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	m_customFieldSize.x = static_cast<int>(wxConfig::Get()->ReadLong("CustomFieldWidth", 16));
 	m_customFieldSize.y = static_cast<int>(wxConfig::Get()->ReadLong("CustomFieldHeight", 16));
 
-	m_difficulty = static_cast<GameDifficulty>(wxConfig::Get()->ReadLong("GameDifficulty", BEGINNER));
+	m_difficulty = static_cast<App::GameDifficulty>(wxConfig::Get()->ReadLong("GameDifficulty", App::BEGINNER));
 	switch (m_difficulty)
 	{
-		case BEGINNER:
+		case App::BEGINNER:
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_BEGINNER);
 			item->Check();
@@ -114,7 +113,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 			break;
 		}
 
-		case INTERMEDIATE:
+		case App::INTERMEDIATE:
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_INTERMEDIATE);
 			item->Check();
@@ -122,7 +121,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 			break;
 		}
 
-		case EXPERT:
+		case App::EXPERT:
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_EXPERT);
 			item->Check();
@@ -130,7 +129,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 			break;
 		}
 
-		case CUSTOM:
+		case App::CUSTOM:
 		{
 			auto* item = m_menuBar->FindItem(ID_GAME_CUSTOM);
 			item->Check();
@@ -169,14 +168,14 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 
 		case ID_GAME_BEGINNER:
 		{
-			if (m_difficulty == BEGINNER)
+			if (m_difficulty == App::BEGINNER)
 			{
 				return;
 			}
 
 			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
 
-			m_difficulty = BEGINNER;
+			m_difficulty = App::BEGINNER;
 			m_difficultyName = "Beginner";
 			StartNewGame();
 			m_menuBar->FindItem(ID_GAME_BEGINNER)->Check(true);
@@ -186,14 +185,14 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 
 		case ID_GAME_INTERMEDIATE:
 		{
-			if (m_difficulty == INTERMEDIATE)
+			if (m_difficulty == App::INTERMEDIATE)
 			{
 				return;
 			}
 
 			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
 
-			m_difficulty = INTERMEDIATE;
+			m_difficulty = App::INTERMEDIATE;
 			m_difficultyName = "Intermediate";
 			StartNewGame();
 			m_menuBar->FindItem(ID_GAME_INTERMEDIATE)->Check(true);
@@ -203,14 +202,14 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 
 		case ID_GAME_EXPERT:
 		{
-			if (m_difficulty == EXPERT)
+			if (m_difficulty == App::EXPERT)
 			{
 				return;
 			}
 
 			m_menuBar->FindItem(static_cast<int>(ID_GAME_BEGINNER) + static_cast<int>(m_difficulty))->Check(false);
 
-			m_difficulty = EXPERT;
+			m_difficulty = App::EXPERT;
 			m_difficultyName = "Expert";
 			StartNewGame();
 			m_menuBar->FindItem(ID_GAME_EXPERT)->Check(true);
@@ -226,20 +225,20 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 			{
 				m_customFieldSize = dlg.GetCustomFieldSize();
 				m_customMineCount = dlg.GetCustomMineCount();
-				m_difficulty = CUSTOM;
+				m_difficulty = App::CUSTOM;
 				m_difficultyName = "Custom";
 				switch (previousDifficulty)
 				{
-					case BEGINNER:
+					case App::BEGINNER:
 						m_menuBar->FindItem(ID_GAME_BEGINNER)->Check(false);
 						break;
-					case INTERMEDIATE:
+					case App::INTERMEDIATE:
 						m_menuBar->FindItem(ID_GAME_INTERMEDIATE)->Check(false);
 						break;
-					case EXPERT:
+					case App::EXPERT:
 						m_menuBar->FindItem(ID_GAME_EXPERT)->Check(false);
 						break;
-					case CUSTOM:
+					case App::CUSTOM:
 						m_menuBar->FindItem(ID_GAME_CUSTOM)->Check(false);
 						break;
 				}
@@ -247,19 +246,19 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 			}
 			else
 			{
-				m_menuBar->FindItem(ID_GAME_CUSTOM)->Check(previousDifficulty == CUSTOM);
+				m_menuBar->FindItem(ID_GAME_CUSTOM)->Check(previousDifficulty == App::CUSTOM);
 				switch (previousDifficulty)
 				{
-					case BEGINNER:
+					case App::BEGINNER:
 						m_menuBar->FindItem(ID_GAME_BEGINNER)->Check(true);
 						break;
-					case INTERMEDIATE:
+					case App::INTERMEDIATE:
 						m_menuBar->FindItem(ID_GAME_INTERMEDIATE)->Check(true);
 						break;
-					case EXPERT:
+					case App::EXPERT:
 						m_menuBar->FindItem(ID_GAME_EXPERT)->Check(true);
 						break;
-					case CUSTOM:
+					case App::CUSTOM:
 						m_menuBar->FindItem(ID_GAME_CUSTOM)->Check(true);
 						break;
 				}
@@ -320,16 +319,16 @@ void MainWindow::StartNewGame()
 {
 	switch (m_difficulty)
 	{
-		case BEGINNER:
+		case App::BEGINNER:
 			m_mineField->Reset({ 9, 9 }, 10);
 			break;
-		case INTERMEDIATE:
+		case App::INTERMEDIATE:
 			m_mineField->Reset({ 16, 16 }, 40);
 			break;
-		case EXPERT:
+		case App::EXPERT:
 			m_mineField->Reset({ 30, 16 }, 99);
 			break;
-		case CUSTOM:
+		case App::CUSTOM:
 			m_mineField->Reset(m_customFieldSize, m_customMineCount);
 			break;
 	}
@@ -375,7 +374,7 @@ void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
 		{
 			m_btnNewGame->SetBitmap(wxBitmap(smile_2_xpm));
 
-			if (m_difficulty == CUSTOM)
+			if (m_difficulty == App::CUSTOM)
 			{
 				break;
 			}

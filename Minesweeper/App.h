@@ -10,6 +10,14 @@
 class App final : public wxApp
 {
 public:
+	enum GameDifficulty : uint8_t
+	{
+		BEGINNER,
+		INTERMEDIATE,
+		EXPERT,
+		CUSTOM
+	};
+
 	bool OnInit() override;
 	int OnExit() override;
 	[[nodiscard]] Json::Value& GetBestTimes() { return m_bestTimes; }
