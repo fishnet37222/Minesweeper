@@ -391,6 +391,12 @@ void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
 		case MineField::WIN:
 		{
 			m_btnNewGame->SetBitmap(wxBitmap(smile_2_xpm));
+
+			if (m_difficulty == CUSTOM)
+			{
+				break;
+			}
+
 			if (m_bestTimes.isMember(m_difficultyName))
 			{
 				if (m_bestTimes[m_difficultyName]["time"].asInt() > m_ssdElapsedSeconds->GetValue())
