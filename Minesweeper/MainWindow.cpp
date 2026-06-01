@@ -5,6 +5,7 @@
 #include "pch.h"
 #include "AboutDialog.h"
 #include "CustomFieldDialog.h"
+#include "BestTimesDialog.h"
 #include "MainWindow.h"
 #include <wx/config.h>
 #include <fstream>
@@ -266,6 +267,13 @@ void MainWindow::MenuBar_OnItemSelect([[maybe_unused]] wxCommandEvent& event)
 			break;
 		}
 
+		case ID_GAME_BEST_TIMES:
+		{
+			BestTimesDialog dlg(this);
+			dlg.ShowModal();
+			break;
+		}
+
 		case ID_GAME_EXIT:
 		{
 			Close();
@@ -396,6 +404,9 @@ void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
 				bestTimes[m_difficultyName]["time"] = m_ssdElapsedSeconds->GetValue();
 				bestTimes[m_difficultyName]["date"] = wxDateTime::Now().FormatISODate().ToStdString();
 				wxGetApp().SetBestTimes(bestTimes);
+
+				BestTimesDialog bestTimesDlg(this);
+				bestTimesDlg.ShowModal();
 			}
 			break;
 		}
