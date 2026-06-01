@@ -7,6 +7,7 @@
 #include "CustomFieldDialog.h"
 #include "MainWindow.h"
 #include <wx/config.h>
+#include <fstream>
 
 #include "bitmaps/smile-1.xpm"
 #include "bitmaps/smile-2.xpm"
@@ -81,6 +82,13 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	szrMainOuter->AddSpacer(10);
 	SetSizerAndFit(szrMainOuter);
 
+	if (std::filesystem::exists(m_bestTimesFilePath))
+	{
+		std::ifstream bestTimesFile(m_bestTimesFilePath);
+		bestTimesFile >> m_bestTimes;
+		bestTimesFile.close();
+	}
+
 	const auto savedPositionX = static_cast<int>(wxConfig::Get()->ReadLong("MainWindowPositionX", -1));
 	// ReSharper disable once CppTooWideScopeInitStatement
 	const auto savedPositionY = static_cast<int>(wxConfig::Get()->ReadLong("MainWindowPositionY", -1));
@@ -146,6 +154,16 @@ void MainWindow::MainWindow_OnClose(wxCloseEvent& event)
 	wxConfig::Get()->Write("CustomFieldHeight", m_customFieldSize.y);
 	wxConfig::Get()->Write("CustomMineCount", m_customMineCount);
 	wxConfig::Get()->Flush();
+
+	if (!std::filesystem::exists(m_bestTimesFilePath.parent_path()))
+	{
+		std::filesystem::create_directories(m_bestTimesFilePath.parent_path());
+	}
+
+	std::ofstream bestTimesFile(m_bestTimesFilePath);
+	bestTimesFile << m_bestTimes.toStyledString();
+	bestTimesFile.close();
+
 	event.Skip();
 }
 
