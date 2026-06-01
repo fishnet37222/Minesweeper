@@ -19,9 +19,7 @@ bool App::OnInit()
 	SetVendorName("FishNetSoft");
 	SetAppName("Minesweeper");
 
-#ifdef __linux__
-	wxStandardPaths::Get().SetFileLayout(wxStandardPathsBase::FileLayout_XDG);
-#endif
+	wxStandardPaths::Get().UseAppInfo(wxStandardPaths::AppInfo_VendorName | wxStandardPaths::AppInfo_AppName);
 
 	auto* mainWindow = new MainWindow();
 	SetTopWindow(mainWindow);
