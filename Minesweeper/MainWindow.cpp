@@ -8,6 +8,7 @@
 #include "MainWindow.h"
 #include <wx/config.h>
 #include <fstream>
+#include "App.h"
 
 #include "bitmaps/smile-1.xpm"
 #include "bitmaps/smile-2.xpm"
@@ -28,8 +29,6 @@ enum : uint16_t
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX))
 {
-	m_bestTimesFilePath = wxStandardPaths::Get().GetUserDataDir().ToStdString() + "/best_times.json";
-
 	wxFrame::SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
 
 	wxFrame::SetIcons(wxIconBundle("APP_ICON", nullptr));
@@ -83,13 +82,6 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Minesweeper", wxDefaultPo
 	szrMainOuter->Add(szrMainInner, wxSizerFlags(1).Expand());
 	szrMainOuter->AddSpacer(10);
 	SetSizerAndFit(szrMainOuter);
-
-	if (std::filesystem::exists(m_bestTimesFilePath))
-	{
-		std::ifstream bestTimesFile(m_bestTimesFilePath);
-		bestTimesFile >> m_bestTimes;
-		bestTimesFile.close();
-	}
 
 	const auto savedPositionX = static_cast<int>(wxConfig::Get()->ReadLong("MainWindowPositionX", -1));
 	// ReSharper disable once CppTooWideScopeInitStatement
@@ -160,15 +152,6 @@ void MainWindow::MainWindow_OnClose(wxCloseEvent& event)
 	wxConfig::Get()->Write("CustomFieldHeight", m_customFieldSize.y);
 	wxConfig::Get()->Write("CustomMineCount", m_customMineCount);
 	wxConfig::Get()->Flush();
-
-	if (!std::filesystem::exists(m_bestTimesFilePath.parent_path()))
-	{
-		std::filesystem::create_directories(m_bestTimesFilePath.parent_path());
-	}
-
-	std::ofstream bestTimesFile(m_bestTimesFilePath);
-	bestTimesFile << m_bestTimes.toStyledString();
-	bestTimesFile.close();
 
 	event.Skip();
 }
@@ -397,9 +380,11 @@ void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
 				break;
 			}
 
-			if (m_bestTimes.isMember(m_difficultyName))
+			auto bestTimes = wxGetApp().GetBestTimes();
+
+			if (bestTimes.isMember(m_difficultyName))
 			{
-				if (m_bestTimes[m_difficultyName]["time"].asInt() > m_ssdElapsedSeconds->GetValue())
+				if (bestTimes[m_difficultyName]["time"].asInt() > m_ssdElapsedSeconds->GetValue())
 				{
 					break;
 				}
@@ -408,8 +393,9 @@ void MainWindow::MineField_OnGameOver(wxCommandEvent& event)
 				dialog.ShowModal() == wxID_OK)
 			{
 				const std::string playerName = dialog.GetValue().ToStdString();
-				m_bestTimes[m_difficultyName]["name"] = playerName;
-				m_bestTimes[m_difficultyName]["time"] = m_ssdElapsedSeconds->GetValue();
+				bestTimes[m_difficultyName]["name"] = playerName;
+				bestTimes[m_difficultyName]["time"] = m_ssdElapsedSeconds->GetValue();
+				wxGetApp().SetBestTimes(bestTimes);
 			}
 			break;
 		}
