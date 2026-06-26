@@ -29,6 +29,21 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 	graphicsContext->SetBrush(wxBrush(GetBackgroundColour()));
 	graphicsContext->DrawRectangle(0, 0, GetSize().x, GetSize().y);
 
+	const auto parentBackgroundColor = GetParent()->GetBackgroundColour();
+	const auto highlightColor = parentBackgroundColor.ChangeLightness(150);
+	const auto shadowColor = parentBackgroundColor.ChangeLightness(50);
+
+	for (auto i = 0; i < 2; i++)
+	{
+		graphicsContext->SetPen(shadowColor);
+		graphicsContext->StrokeLine(i, i, GetClientSize().GetWidth() - i, i);
+		graphicsContext->StrokeLine(i, i, i, GetClientSize().GetHeight() - i);
+
+		graphicsContext->SetPen(highlightColor);
+		graphicsContext->StrokeLine(i, GetClientSize().GetHeight() - i, GetClientSize().GetWidth() - i, GetClientSize().GetHeight() - i);
+		graphicsContext->StrokeLine(GetClientSize().GetWidth() - i, i, GetClientSize().GetWidth() - i, GetClientSize().GetHeight() - i);
+	}
+
 	const auto litColor = GetForegroundColour();
 	const auto unlitColor = GetForegroundColour().ChangeLightness(25);
 
@@ -49,8 +64,8 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 		const auto digit = valueString[digitIndex];
 		const auto digitSegments = m_segmentMap[digit];
 
-		const auto digitOriginX = m_digitSpacing + digitIndex * (m_digitSize.x + m_digitSpacing);
-		const auto digitOriginY = m_digitSpacing;
+		const auto digitOriginX = m_digitSpacing + digitIndex * (m_digitSize.x + m_digitSpacing) + 2;
+		const auto digitOriginY = m_digitSpacing + 2;
 
 		for (const auto& segment : { SEGMENT_LIST })
 		{
@@ -148,8 +163,8 @@ void SevenSegmentDisplay::SevenSegmentDisplay_OnPaint([[maybe_unused]] wxPaintEv
 
 wxSize SevenSegmentDisplay::DoGetBestClientSize() const
 {
-	const auto width = m_digitCount * m_digitSize.x + (m_digitCount + 1) * m_digitSpacing;
-	const auto height = m_digitSize.y + 2 * m_digitSpacing;
+	const auto width = m_digitCount * m_digitSize.x + (m_digitCount + 1) * m_digitSpacing + 5;
+	const auto height = m_digitSize.y + 2 * m_digitSpacing + 5;
 	return { width, height };
 }
 
