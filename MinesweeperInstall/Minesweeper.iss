@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Minesweeper"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "FishNetSoft"
 #define MyAppURL "https://github.com/fishnet37222/Minesweeper"
 #define MyAppExeName "Minesweeper.exe"
