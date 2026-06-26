@@ -15,7 +15,7 @@ AboutDialog::AboutDialog(wxWindow* parent)
 	auto* szrMainOuter = new wxBoxSizer(wxHORIZONTAL);
 	szrMainOuter->AddSpacer(10);
 	auto* szrMainInner = new wxBoxSizer(wxVERTICAL);
-	szrMainInner->Add(new wxStaticText(this, wxID_ANY, "Minesweeper Version 1.0.0"), wxSizerFlags(0).CenterHorizontal());
+	szrMainInner->Add(new wxStaticText(this, wxID_ANY, "Minesweeper Version 1.0.1"), wxSizerFlags(0).CenterHorizontal());
 	szrMainInner->Add(new wxStaticText(this, wxID_ANY, "Copyright \u00a9 2026 David A. Frischknecht"), wxSizerFlags(0).CenterHorizontal());
 	szrMainInner->Add(new wxHyperlinkCtrl(this, wxID_ANY, "Licensed under the Apache License, Version 2.0", "https://www.apache.org/licenses/LICENSE-2.0"), wxSizerFlags(0).CenterHorizontal());
 	szrMainInner->Add(new wxHyperlinkCtrl(this, wxID_ANY, "Source Code on GitHub", "https://github.com/fishnet37222/Minesweeper"), wxSizerFlags(0).CenterHorizontal());
